@@ -40,8 +40,6 @@ public abstract class Characters : MonoBehaviour {
 
 	}
 
-	public abstract IEnumerator TakeDamage ();
-
 	public void MeleeAttack()
 	{
 		attackCollider.enabled = !attackCollider.enabled;
@@ -49,6 +47,8 @@ public abstract class Characters : MonoBehaviour {
 		attackCollider.transform.position = new Vector3(attackCollider.transform.position.x + 0,01, attackCollider.transform.position.y);
 		attackCollider.transform.position = tmpPos;
 	}
+
+	public abstract IEnumerator TakeDamage ();
 
 	public virtual void ChangeDirection()
 	{
@@ -65,7 +65,8 @@ public abstract class Characters : MonoBehaviour {
 	{
 		if (damageSources.Contains (other.tag))
 		{
-			Debug.Log ("Hit by " + other.tag);
+			Debug.Log ("Hit by " + other.name);
+
 			StartCoroutine (TakeDamage ());
 		}
 	}

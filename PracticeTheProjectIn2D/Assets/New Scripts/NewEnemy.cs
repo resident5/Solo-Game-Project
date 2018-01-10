@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : Characters
+public class NewEnemy : NewCharacters
 {
 
 	#region Variables
@@ -10,9 +10,6 @@ public class Enemy : Characters
 	[Header ("Static")]
 
 	public static int enemyCounter;
-
-	[Space]
-	[Header ("Private")]
 
 	[SerializeField]
 	private Collider2D col;
@@ -29,109 +26,96 @@ public class Enemy : Characters
 	[SerializeField]
 	private float rangedRange;
 
-	private IEnemyState currentState;
-
-	private Canvas healthCanvas;
-
 	public bool InMeleeRange
 	{
 		get {
-			if (Target != null)
+			if (target != null)
 			{
-				return Vector2.Distance (transform.position, Target.transform.position) <= meleeRange;
+				return Vector2.Distance (transform.position, target.transform.position) <= meleeRange;
 			}
 
 			return false;
 		}
 	}
-
 
 	public bool InRangedRange
 	{
 		get {
-			if (Target != null)
+			if (target != null)
 			{
-				return Vector2.Distance (transform.position, Target.transform.position) <= rangedRange;
+				return Vector2.Distance (transform.position, target.transform.position) <= rangedRange;
 			}
 
 			return false;
 		}
 	}
 
+	private IEnemyState currentState;
 
-	public override bool IsDead
-	{
-		get {
-			return healthStat.CurrentVal <= 0;
-		}
-	}
-
-
-	public GameObject Target { get; set; }
+	private Canvas healthCanvas;
 
 	#endregion
+
+	public GameObject target;
 
 	public override void Start ()
 	{
 		base.Start ();
-//		ChangeState (new IdleState());
-		enemyCounter++;
+
+		StateChange (new IdleState ());
 
 		healthCanvas = transform.GetComponentInChildren<Canvas> ();
 	}
 
 	void Update ()
 	{
-		
+
 		if (!IsDead)
 		{
-			if (!TakingDamage)
+			if (!damaged)
 			{
-//				currentState.Execute ();
+				currentState.StateUpdate ();
 
 				LookAtTarget ();
 			}
 		}
-			
-	}
-	//
-	//	public void ChangeState(IEnemyState newState)
-	//	{
-	//		if (currentState != null) {
-	//			currentState.Exit ();
-	//		}
-	//
-	//		currentState = newState;
-	//
-	//		currentState.Enter (this);
-	//	}
 
-	#region SetTrigger Methods
+	}
+
+	public void StateChange (IEnemyState newEnemyState)
+	{
+		if (currentState != null)
+		{
+			currentState.End ();
+		}
+		currentState = newEnemyState;
+
+		currentState.Start (this);
+
+	}
 
 	public void Move ()
 	{
-		if (!Attack)
+		if (!attack)
 		{
-			MyAnimator.SetFloat ("speed", 0f);
-			transform.Translate (GetDirection () * (maxSpeed * Time.deltaTime));
+			animator.SetFloat ("speed", 0f);
+			transform.Translate (GetDirection () * (speed * Time.deltaTime));
 		}
 	}
 
-	#endregion
-
 	public Vector2 GetDirection ()
 	{
-		return faceRight ? Vector2.right : Vector2.left;
+		return facingRight ? Vector2.right : Vector2.left;
 	}
 
 	private void LookAtTarget ()
 	{
 
-		if (Target != null)
+		if (target != null)
 		{
-			float xDir = Target.transform.position.x - transform.position.x;
+			float xDir = target.transform.position.x - transform.position.x;
 
-			if (xDir < 0 && faceRight || xDir > 0 && !faceRight)
+			if (xDir < 0 && facingRight || xDir > 0 && !facingRight)
 			{
 				ChangeDirection ();
 			}
@@ -140,14 +124,21 @@ public class Enemy : Characters
 
 	public override void ChangeDirection ()
 	{
+		//Get the healthbar canvas attached to this enemy
 		Transform tmp = transform.Find ("EnemyHealthBarCanvas").transform;
+
+		//Get the original position before flipping the enemy
 		Vector3 pos = tmp.position;
+
+		//Unparent the canvas quickly
 		tmp.SetParent (null);
 
 		base.ChangeDirection ();
 
+		//Parent the canvas quickly
 		tmp.SetParent (transform);
 
+		//Set the canvas's position to its original
 		tmp.position = pos;
 
 	}
@@ -165,24 +156,33 @@ public class Enemy : Characters
 		if (other.gameObject.tag == "Projectile")
 		{
 			Destroy (other.gameObject);
-//			ChangeState(new StunState ());
+			StateChange (new StunState ());
 		}
 	}
 
 	#endregion
 
-	public override void Death ()
+	public void Death ()
 	{
-		MyAnimator.SetTrigger ("die");
+		animator.SetTrigger ("die");
 		attackCollider.enabled = false;
 	}
 
-	public void playerGrab ()
+	public void PlayerGrab ()
 	{
-		MyAnimator.SetTrigger ("advantage");
+		animator.SetTrigger ("advantage");
 	}
 
-	public override IEnumerator TakeDamage ()
+	public override void Attack ()
+	{
+		attackCollider.enabled = !attackCollider.enabled;
+		Vector3 tmpPos = attackCollider.transform.position;
+		attackCollider.transform.position = new Vector3 (attackCollider.transform.position.x + 0, 01, attackCollider.transform.position.y);
+		attackCollider.transform.position = tmpPos;
+
+	}
+
+	public override IEnumerator TakeDamage (int dmg)
 	{
 		if (!healthCanvas.isActiveAndEnabled)
 		{
@@ -194,8 +194,7 @@ public class Enemy : Characters
 			yield return new WaitForSeconds (.1f);
 
 			healthStat.CurrentVal -= 10;
-			//Debug.Log ("Enemy OUCH Damage");
-			MyAnimator.SetTrigger ("damage");
+			animator.SetTrigger ("damage");
 
 		} else
 		{
@@ -208,9 +207,6 @@ public class Enemy : Characters
 
 	}
 
-	#region Things I may not need anymore
-
-
 	private void turnOffCollisions ()
 	{
 		col.enabled = false;
@@ -218,6 +214,5 @@ public class Enemy : Characters
 		myRigidBody.isKinematic = true;
 
 	}
-
-	#endregion
+				
 }

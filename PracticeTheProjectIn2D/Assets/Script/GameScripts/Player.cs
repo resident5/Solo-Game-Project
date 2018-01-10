@@ -59,7 +59,6 @@ public class Player : Characters
 
 	[Header("Player Information")]
 
-
 	[SerializeField]
 	private Transform[] groundPoints;
 
@@ -122,11 +121,9 @@ public class Player : Characters
 			}
 		}
 
-		Debug.Log (stunMeter);
+		Stun ();
 
-		HandleStun ();
-
-		HandleInput ();
+		PlayerInput ();
 
 	}
 		
@@ -142,7 +139,7 @@ public class Player : Characters
 
 					OnGround = IsGrounded ();
 	
-					HandleMovement (move);
+					PlayerMovement (move);
 
 					Flip (move);
 				}
@@ -152,7 +149,7 @@ public class Player : Characters
 
 	#region Inputs/Movement
 
-	private void HandleMovement (float move)
+	private void PlayerMovement (float move)
 	{
 
 		if (MyRigidbody.velocity.y < 0)
@@ -170,25 +167,11 @@ public class Player : Characters
 		{
 			MyRigidbody.AddForce (new Vector2 (0, jumpForce));
 		}
-
-//		if (DoubleJump && !OnGround && MyRigidbody.velocity.y > 0)
-//		{
-//			MyRigidbody.AddForce (new Vector2 (0, jumpForce));
-//			Debug.Log ("DOUBLE JUMP");
-//			DoubleJump = false;
-//		}
-
-//		if (DoubleJump && !Jump)
-//		{
-//			MyRigidbody.AddForce (new Vector2 (0, jumpForce));
-//			Debug.Log ("DOUBLE JUMP");
-//		}
-
 		MyAnimator.SetFloat ("speed", Mathf.Abs (move));
 
 	}
 
-	private void HandleInput ()
+	private void PlayerInput ()
 	{
 		if (Input.GetKeyDown (KeyCode.Z))
 		{
@@ -199,11 +182,6 @@ public class Player : Characters
 		{
 			MyAnimator.SetTrigger ("jump");
 		}
-
-//		if (Input.GetKeyDown (KeyCode.UpArrow) && !DoubleJump)
-//		{
-//			MyAnimator.SetTrigger ("double jump");
-//		}
 
 		if (Input.GetKeyDown (KeyCode.RightArrow))
 		{
@@ -298,51 +276,20 @@ public class Player : Characters
 		}
 	}
 
-	private void HandleStun()
+	private void Stun()
 	{
 		if (stunMeter >= stunMeterMax)
 		{
+			Debug.Log ("Stunned");
 			Stunned = true;
 			MyAnimator.SetBool ("stunned", true);
 		}
 	}
-
-
+		
 	#endregion
 
 	#region OnTrigger / Collision Methods
 
-
-
-//	void OnTriggerEnter2D (Collider2D other)
-//	{
-//		if (other.gameObject.tag == "Demons")
-//		{
-//			MyRigidbody.AddForce (new Vector2 (0f, jumpForce + bounceForce));
-//			score += 100;
-//		}
-//
-//		// If its an item but a health item
-//		if (other.gameObject.tag == "Item" && other.gameObject.layer == 11)
-//		{
-//			health.CurrentVal += ItemMovement.lifehp;
-//			other.gameObject.SetActive (false);
-//		}	
-//	}
-
-
-//	void OnCollisionEnter2D (Collision2D other)
-//	{
-//		float xDir = transform.position.x - other.transform.position.x;
-//			
-//		if (other.gameObject.tag == "Demons")
-//		{
-//			MyRigidbody.AddForce (new Vector2 (knockBack * xDir, knockBack));
-//			StartCoroutine (TakeDamage ());
-//		}
-//
-//	}
-//
 	#endregion
 
 	#region Player Health Changes

@@ -20,7 +20,7 @@ public class CameraMoveScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		player = GameObject.Find ("Player").transform;
+		//player = GameObject.Find ("Player").transform;
 	}
 
 	void LateUpdate () {

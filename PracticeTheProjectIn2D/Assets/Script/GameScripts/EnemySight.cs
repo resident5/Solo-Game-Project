@@ -5,13 +5,18 @@ using UnityEngine;
 public class EnemySight : MonoBehaviour {
 
 	[SerializeField]
-	private Enemy enemy;
+	private NewEnemy enemy;
+
+	void Start()
+	{
+		enemy = GetComponentInParent<NewEnemy> ();
+	}
 
 	void OnTriggerEnter2D(Collider2D other)
 	{
 		if (other.gameObject.tag == "Player")
 		{
-			enemy.Target = other.gameObject;
+			enemy.target = other.gameObject;
 			Debug.Log ("Target Acquired: " + other.gameObject.name);
 		}
 		
@@ -21,7 +26,7 @@ public class EnemySight : MonoBehaviour {
 	{
 		if (other.gameObject.tag == "Player")
 		{
-			enemy.Target = null;
+			enemy.target = null;
 			Debug.Log ("Lost Target!!!");
 		}
 	}

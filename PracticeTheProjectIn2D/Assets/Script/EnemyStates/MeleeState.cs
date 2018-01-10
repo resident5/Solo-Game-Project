@@ -4,28 +4,28 @@ using UnityEngine;
 
 public class MeleeState : IEnemyState {
 
-	private Enemy enemy;
+	private NewEnemy enemy;
 
 	private float attackTimer;
 	private float attackCooldown = 2;
 	public bool canAttack = true;
 
-	public void Enter(Enemy enemy)
+	public void Start(NewEnemy enemy)
 	{
 		this.enemy = enemy;
 	}
-	public void Execute ()
+	public void StateUpdate ()
 	{
 		Attack ();
 
-		if (!enemy.InMeleeRange)
+		if (enemy.target == null)
 		{
-			enemy.ChangeState (new RangedState ());
-		
+			enemy.StateChange (new IdleState ());
 		}
-		else if (enemy.Target == null)
+
+		if (NewPlayer.Instance.stunned)
 		{
-			enemy.ChangeState (new IdleState ());
+			enemy.StateChange (new AdvantageState());
 		}
 			
 //		if (enemy.Target != null)
@@ -38,7 +38,7 @@ public class MeleeState : IEnemyState {
 //		}
 
 	}
-	public void Exit()
+	public void End()
 	{
 
 	}
@@ -61,7 +61,7 @@ public class MeleeState : IEnemyState {
 		if (canAttack)
 		{
 			canAttack = false;
-			enemy.MyAnimator.SetTrigger("attack");
+			enemy.animator.SetTrigger("attack");
 		}
 
 	}

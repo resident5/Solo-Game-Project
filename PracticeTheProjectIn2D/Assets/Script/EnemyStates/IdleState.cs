@@ -4,28 +4,28 @@ using UnityEngine;
 
 public class IdleState : IEnemyState {
 
-	private Enemy enemy;
+	private NewEnemy enemy;
 
 	private float idleTimer;
 
 	private float idleDuration;
 
-	public void Enter(Enemy enemy)
+	public void Start(NewEnemy enemy)
 	{
 		idleDuration = Random.Range (1, 11);
 		this.enemy = enemy;
 	}
 
-	public void Execute ()
+	public void StateUpdate ()
 	{
 		Idle ();
 
-		if (enemy.Target != null)
+		if (enemy.target != null)
 		{
-			enemy.ChangeState (new PatrolState ());
+			enemy.StateChange (new PatrolState ());
 		}
 	}
-	public void Exit()
+	public void End()
 	{
 
 	}
@@ -36,12 +36,12 @@ public class IdleState : IEnemyState {
 
 	private void Idle()
 	{
-		enemy.MyAnimator.SetFloat ("speed", 0f);
+		enemy.animator.SetFloat ("speed", 0f);
 
 		idleTimer += Time.deltaTime;
 
 		if (idleTimer >= idleDuration) {
-			enemy.ChangeState (new PatrolState());
+			enemy.StateChange (new PatrolState());
 		}
 	}
 }

@@ -3,24 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class StunState : IEnemyState {
-	private Enemy enemy;
+	private NewEnemy enemy;
 
 	private float stunTimer;
 
 	private float stunDuration = 1f;
 
-	public void Enter(Enemy enemy)
+	public void Start(NewEnemy enemy)
 	{
 		this.enemy = enemy;
 	}
 
-	public void Execute ()
+	public void StateUpdate ()
 	{
 		Debug.Log("STUNNED");
 
 		Stun ();
 	}
-	public void Exit()
+	public void End()
 	{
 
 	}
@@ -31,12 +31,12 @@ public class StunState : IEnemyState {
 
 	private void Stun()
 	{
-		enemy.MyAnimator.SetFloat ("speed", 0f);
+		enemy.animator.SetFloat ("speed", 0f);
 
 		stunTimer += Time.deltaTime;
 
 		if (stunTimer >= stunDuration) {
-			enemy.ChangeState (new PatrolState());
+			enemy.StateChange (new PatrolState());
 		}
 	}
 }
