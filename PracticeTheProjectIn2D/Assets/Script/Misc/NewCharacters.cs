@@ -4,13 +4,10 @@ using UnityEngine;
 
 public abstract class NewCharacters : MonoBehaviour
 {
+	public Stat healthStat;
 
-	[SerializeField]
-	protected Stat healthStat;
-
-	[SerializeField]
-	protected float speed;
-	protected int damage;
+	public float speed;
+	public int damage;
 
 	protected bool facingRight;
 
@@ -32,13 +29,10 @@ public abstract class NewCharacters : MonoBehaviour
 
 	public Animator animator;
 
-	//	public Status effect;
+	public IStatusEffects status = null;
 
 	[SerializeField]
 	private List<Collider2D> damageSources;
-
-	[SerializeField]
-	private Collider2D[] myhitbox;
 
 	public Collider2D attackCollider;
 

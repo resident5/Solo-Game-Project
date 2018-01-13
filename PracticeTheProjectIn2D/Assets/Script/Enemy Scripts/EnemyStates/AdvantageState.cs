@@ -31,12 +31,12 @@ public class AdvantageState : IEnemyState {
 	}
 	public void OnTriggerEnter (Collider2D other)
 	{
-		if (other.gameObject.tag == "Player" && other.gameObject.GetComponent<Player>().Stunned)
+		if (other.gameObject.tag == "Player" && other.gameObject.GetComponent<NewPlayer>().stunned)
 		{
 			Debug.Log ("FUCK HIm");
 			Sex ();
-			Player.Instance.transform.position = enemy.transform.position;
-			Player.Instance.mySprite.enabled = false;
+			NewPlayer.Instance.transform.position = enemy.transform.position;
+			NewPlayer.Instance.sprite.enabled = false;
 		}
 	}
 

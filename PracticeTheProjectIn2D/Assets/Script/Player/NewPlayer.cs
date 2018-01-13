@@ -112,7 +112,7 @@ public class NewPlayer : NewCharacters
 	void Update ()
 	{
 		PlayerInput ();
-	
+		
 	}
 
 	void FixedUpdate ()
@@ -131,6 +131,8 @@ public class NewPlayer : NewCharacters
 					PlayerMovement (move);
 
 					ChangeLayerWeight ();
+
+					StatusEffects (status);
 				}
 			}
 		}
@@ -139,16 +141,21 @@ public class NewPlayer : NewCharacters
 
 	private void PlayerInput ()
 	{
-		if (Input.GetKeyDown (KeyCode.UpArrow))
+		if (Input.GetKeyDown (KeyboardInputs.Instance.keybinder ["JUMP"]))
 		{
 			animator.SetTrigger ("jump");
 
 		}
 
-		if (Input.GetKeyDown (KeyCode.Z))
+		if (Input.GetKeyDown (KeyboardInputs.Instance.keybinder ["ATTACK"]))
 		{
 			animator.SetTrigger ("attack");
 
+		}
+
+		if (Input.GetKeyDown (KeyCode.Alpha1))
+		{
+			StatusEffects (new Frosted ());
 		}
 
 //		if (Input.GetKeyDown (KeyCode.RightArrow))
@@ -187,17 +194,30 @@ public class NewPlayer : NewCharacters
 			myRigidbody.AddForce (new Vector2 (0, jumpForce));
 		}
 
-		if (OnGround) //if the player is on the ground then move
-		{
-			myRigidbody.velocity = new Vector2 (move * speed, myRigidbody.velocity.y);
-		}
+
 
 		Turn (move);
+
+		myRigidbody.velocity = new Vector2 (move * speed, myRigidbody.velocity.y);
 
 		animator.SetFloat ("speed", Mathf.Abs (move));
 
 
 	}
+
+	private void StatusEffects (IStatusEffects newStatus)
+	{
+		status = newStatus;
+
+		if (status != null)
+		{
+			status.Start (this); 
+
+			status.Duration (); 
+		}
+	}
+
+	#region DO NOT TOUCH METHODS
 
 	private bool IsGrounded ()
 	{
@@ -237,9 +257,9 @@ public class NewPlayer : NewCharacters
 		while (immortal && !stunned)
 		{
 			sprite.enabled = false;	
-			yield return new WaitForSeconds (.1f);
+			yield return null;
 			sprite.enabled = true;
-			yield return new WaitForSeconds (.1f);
+			yield return null;
 		}
 	}
 
@@ -282,11 +302,15 @@ public class NewPlayer : NewCharacters
 		turnOffColliders ();
 	}
 
+	#endregion
+
+	#region Override Methods
+
 	public override void Attack ()
 	{
 		attackCollider.enabled = !attackCollider.enabled;
 		Vector3 tmpPos = attackCollider.transform.position;
-		attackCollider.transform.position = new Vector3(attackCollider.transform.position.x + 0,01, attackCollider.transform.position.y);
+		attackCollider.transform.position = new Vector3 (attackCollider.transform.position.x + 0, 01, attackCollider.transform.position.y);
 		attackCollider.transform.position = tmpPos;
 
 	}
@@ -322,6 +346,8 @@ public class NewPlayer : NewCharacters
 			}
 		}
 	}
+
+	#endregion
 
 	#region Colliders
 

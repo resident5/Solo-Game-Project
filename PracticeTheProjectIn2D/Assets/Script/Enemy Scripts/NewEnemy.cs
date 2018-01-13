@@ -122,6 +122,7 @@ public class NewEnemy : NewCharacters
 		}
 	}
 
+	//This is to change the direction of the Enemy Health bar without flipping it
 	public override void ChangeDirection ()
 	{
 		//Get the healthbar canvas attached to this enemy
@@ -164,8 +165,11 @@ public class NewEnemy : NewCharacters
 
 	public void Death ()
 	{
+		Debug.Log ("Enemy should be playing dead now");
 		animator.SetTrigger ("die");
-		attackCollider.enabled = false;
+		enemyCounter--;
+		turnOffCollisions ();
+
 	}
 
 	public void PlayerGrab ()
@@ -191,26 +195,24 @@ public class NewEnemy : NewCharacters
 
 		if (!IsDead)
 		{
-			yield return new WaitForSeconds (.1f);
+			yield return null;
 
 			healthStat.CurrentVal -= 10;
 			animator.SetTrigger ("damage");
 
-		} else
-		{
-			yield return new WaitForSeconds (.1f);
-			turnOffCollisions ();
-			Death ();
-			enemyCounter--;
-
-		}
-
+			if (healthStat.CurrentVal <= 0)
+			{
+				Death ();
+			}
+		} 
 	}
 
 	private void turnOffCollisions ()
 	{
 		col.enabled = false;
 		//myRigidBody.velocity = Vector2.zero;
+		attackCollider.enabled = false;
+
 		myRigidBody.isKinematic = true;
 
 	}
