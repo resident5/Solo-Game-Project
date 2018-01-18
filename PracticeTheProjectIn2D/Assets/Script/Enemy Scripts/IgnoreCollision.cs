@@ -5,7 +5,10 @@ using UnityEngine;
 public class IgnoreCollision : MonoBehaviour {
 
 	[SerializeField]
-	private Collider2D other, otherC,playerSwordCollider;
+	private Collider2D other = null;
+
+	[SerializeField]
+	private Collider2D otherC = null;
 
 	private void Awake()
 	{

@@ -20,15 +20,12 @@ public class NewEnemy : NewCharacters
 	[SerializeField]
 	private float enemyReactionTime;
 
-	[SerializeField]
-	private float meleeRange;
-
-	[SerializeField]
-	private float rangedRange;
+	public float meleeRange;
 
 	public bool InMeleeRange
 	{
-		get {
+		get
+		{
 			if (target != null)
 			{
 				return Vector2.Distance (transform.position, target.transform.position) <= meleeRange;
@@ -38,47 +35,61 @@ public class NewEnemy : NewCharacters
 		}
 	}
 
-	public bool InRangedRange
-	{
-		get {
-			if (target != null)
-			{
-				return Vector2.Distance (transform.position, target.transform.position) <= rangedRange;
-			}
+	public IEnemyState currentState;
 
-			return false;
-		}
-	}
-
-	private IEnemyState currentState;
-
-	private Canvas healthCanvas;
 
 	#endregion
 
+	public Stat struggleBar;
+
+	public GameObject myStuggleBar;
+
+	private GameObject healthCanvas;
+
+	public float struggleCap = 20;
+
 	public GameObject target;
+
+	public bool usePlayer;
+
+	public bool canSex;
+	public float sexCooldown = 8f;
+	public float timeStampCD;
 
 	public override void Start ()
 	{
 		base.Start ();
-
 		StateChange (new IdleState ());
 
-		healthCanvas = transform.GetComponentInChildren<Canvas> ();
+		healthCanvas = transform.GetComponentInChildren<Canvas> ().transform.Find ("EnemyHealth").gameObject;
+		myStuggleBar = transform.GetComponentInChildren<Canvas> ().transform.Find ("StruggleBar").gameObject;
+
+		healthCanvas.SetActive (false);
+		myStuggleBar.SetActive (false);
+
 	}
 
-	void Update ()
+	void FixedUpdate ()
 	{
-
 		if (!IsDead)
 		{
 			if (!damaged)
 			{
 				currentState.StateUpdate ();
 
-				LookAtTarget ();
+				//LookAtTarget ();
 			}
 		}
+
+		if (!canSex && timeStampCD <= Time.time)
+		{
+			target = null;
+
+			timeStampCD = Time.time + sexCooldown;
+
+			canSex = true;
+		}
+			
 
 	}
 
@@ -94,6 +105,18 @@ public class NewEnemy : NewCharacters
 
 	}
 
+	#region OnTrigger Methods
+
+	public override void OnTriggerEnter2D (Collider2D other)
+	{
+		base.OnTriggerEnter2D (other);
+		currentState.OnTriggerEnter2D (other);
+	}
+
+	#endregion
+
+	#region Do Not Touch Methods
+
 	public void Move ()
 	{
 		if (!attack)
@@ -107,26 +130,12 @@ public class NewEnemy : NewCharacters
 	{
 		return facingRight ? Vector2.right : Vector2.left;
 	}
-
-	private void LookAtTarget ()
-	{
-
-		if (target != null)
-		{
-			float xDir = target.transform.position.x - transform.position.x;
-
-			if (xDir < 0 && facingRight || xDir > 0 && !facingRight)
-			{
-				ChangeDirection ();
-			}
-		}
-	}
-
+		
 	//This is to change the direction of the Enemy Health bar without flipping it
 	public override void ChangeDirection ()
 	{
 		//Get the healthbar canvas attached to this enemy
-		Transform tmp = transform.Find ("EnemyHealthBarCanvas").transform;
+		Transform tmp = transform.Find ("EnemyHealthUI").transform;
 
 		//Get the original position before flipping the enemy
 		Vector3 pos = tmp.position;
@@ -144,37 +153,12 @@ public class NewEnemy : NewCharacters
 
 	}
 
-	#region OnTrigger Methods
-
-	public override void OnTriggerEnter2D (Collider2D other)
-	{
-		base.OnTriggerEnter2D (other);
-		currentState.OnTriggerEnter (other);
-	}
-
-	void OnCollisionEnter2D (Collision2D other)
-	{
-		if (other.gameObject.tag == "Projectile")
-		{
-			Destroy (other.gameObject);
-			StateChange (new StunState ());
-		}
-	}
-
-	#endregion
-
 	public void Death ()
 	{
-		Debug.Log ("Enemy should be playing dead now");
 		animator.SetTrigger ("die");
 		enemyCounter--;
 		turnOffCollisions ();
 
-	}
-
-	public void PlayerGrab ()
-	{
-		animator.SetTrigger ("advantage");
 	}
 
 	public override void Attack ()
@@ -188,16 +172,16 @@ public class NewEnemy : NewCharacters
 
 	public override IEnumerator TakeDamage (int dmg)
 	{
-		if (!healthCanvas.isActiveAndEnabled)
+		if (!healthCanvas.activeInHierarchy)
 		{
-			healthCanvas.enabled = true;
+			healthCanvas.SetActive (true);
 		}
 
 		if (!IsDead)
 		{
 			yield return null;
 
-			healthStat.CurrentVal -= 10;
+			healthStat.CurrentVal -= dmg;
 			animator.SetTrigger ("damage");
 
 			if (healthStat.CurrentVal <= 0)
@@ -216,5 +200,6 @@ public class NewEnemy : NewCharacters
 		myRigidBody.isKinematic = true;
 
 	}
-				
+
+	#endregion
 }

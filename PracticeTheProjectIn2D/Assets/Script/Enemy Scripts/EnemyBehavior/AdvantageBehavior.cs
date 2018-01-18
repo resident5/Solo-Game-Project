@@ -19,8 +19,9 @@ public class AdvantageBehavior : StateMachineBehaviour {
 	override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
 		animator.ResetTrigger ("advantage");
 		NewPlayer.Instance.sprite.enabled = true; 
-
-
+		NewEnemy e = animator.GetComponent<NewEnemy> ();
+		e.StateChange (new PatrolState());
+		e.canSex = false;
 
 	}
 

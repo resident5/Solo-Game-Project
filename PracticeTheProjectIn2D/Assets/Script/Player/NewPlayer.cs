@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class NewPlayer : NewCharacters
 {
@@ -13,7 +14,8 @@ public class NewPlayer : NewCharacters
 
 	public static NewPlayer Instance
 	{
-		get {
+		get
+		{
 			if (instance == null)
 			{
 				instance = GameObject.FindObjectOfType<NewPlayer> ();
@@ -57,8 +59,8 @@ public class NewPlayer : NewCharacters
 	[SerializeField]
 	private LayerMask groundMask;
 
-	[SerializeField]
 	private int stunMeter;
+	private int stunMeterMax = 100;
 
 	#endregion
 
@@ -97,22 +99,48 @@ public class NewPlayer : NewCharacters
 
 	#endregion
 
+	[Space]
+	#region Canvas
+	public Transform statusParent;
+	public GameObject placeholder;
+
 	#endregion
 
-	//	[SerializeField]
-	//	public KeyboardInputs playerKeys;
+	#endregion
+
+	NewEnemy attacker;
+
+	public bool beingUsed;
 
 	public override void Start ()
 	{
 		base.Start ();
 
+		status = new List<IStatusEffects> ();
+
+		StatusEffects (null);
+
 		myRigidbody = GetComponent<Rigidbody2D> ();
+
+		beingUsed = false;
 	}
 
 	void Update ()
 	{
 		PlayerInput ();
-		
+
+		if (beingUsed)
+		{
+			Collider2D[] col = Physics2D.OverlapCircleAll (transform.position, 3f);
+
+			foreach (Collider2D o in col)
+			{
+				if (o.GetComponent<NewEnemy> () != null && o.GetComponent<NewEnemy> ().usePlayer)
+				{
+					attacker = o.GetComponent<NewEnemy> ();
+				}	
+			}
+		}
 	}
 
 	void FixedUpdate ()
@@ -132,15 +160,33 @@ public class NewPlayer : NewCharacters
 
 					ChangeLayerWeight ();
 
-					StatusEffects (status);
+					Stun ();
 				}
 			}
 		}
 	
+		foreach (IStatusEffects stat in status)
+		{
+			if (stat != null)
+			{
+				stat.Duration (); 
+			}
+		}
 	}
 
 	private void PlayerInput ()
 	{
+//		if (Input.GetKeyDown (KeyboardInputs.Instance.keybinder["LEFT"]) && stunned)
+//		{
+//			struggle += 0.2f;
+//		}
+//
+//		if (Input.GetKeyDown (KeyboardInputs.Instance.keybinder["RIGHT"]) && stunned)
+//		{
+//			struggle += 0.2f;
+//		}
+//
+
 		if (Input.GetKeyDown (KeyboardInputs.Instance.keybinder ["JUMP"]))
 		{
 			animator.SetTrigger ("jump");
@@ -155,7 +201,31 @@ public class NewPlayer : NewCharacters
 
 		if (Input.GetKeyDown (KeyCode.Alpha1))
 		{
-			StatusEffects (new Frosted ());
+			if (gameObject.GetComponent<Frosted> () == null)
+			{
+				StatusEffects (gameObject.AddComponent<Frosted> ());
+			} else
+			{
+				gameObject.GetComponent<Frosted> ().stack++;
+			}
+		}
+
+		if (Input.GetKeyDown (KeyCode.Alpha2))
+		{
+			if (gameObject.GetComponent<Poisoned> () == null)
+			{
+				StatusEffects (gameObject.AddComponent<Poisoned> ());
+			} else
+			{
+				gameObject.GetComponent<Poisoned> ().stack++;
+			}
+		}
+
+		if (Input.GetKeyDown (KeyCode.Alpha3))
+		{
+			
+			stunMeter = 100;
+			
 		}
 
 //		if (Input.GetKeyDown (KeyCode.RightArrow))
@@ -207,13 +277,29 @@ public class NewPlayer : NewCharacters
 
 	private void StatusEffects (IStatusEffects newStatus)
 	{
-		status = newStatus;
-
-		if (status != null)
+		foreach (Transform child in statusParent)
 		{
-			status.Start (this); 
+			Destroy (child.gameObject);
+		}
 
-			status.Duration (); 
+		status.Add (newStatus);
+
+		foreach (IStatusEffects stat in status)
+		{
+			if (stat != null)
+			{
+				stat.Begin (this); 
+			}
+		}
+	}
+
+	private void Stun ()
+	{
+		if (stunMeter >= stunMeterMax)
+		{
+			Debug.Log ("Stunned");
+			stunned = true;
+			animator.SetBool ("stunned", true);
 		}
 	}
 
@@ -257,9 +343,9 @@ public class NewPlayer : NewCharacters
 		while (immortal && !stunned)
 		{
 			sprite.enabled = false;	
-			yield return null;
+			yield return new WaitForSeconds (.1f);
 			sprite.enabled = true;
-			yield return null;
+			yield return new WaitForSeconds (.1f);
 		}
 	}
 
@@ -315,7 +401,7 @@ public class NewPlayer : NewCharacters
 
 	}
 
-	public override IEnumerator TakeDamage (int x)
+	public override IEnumerator TakeDamage (int dmg)
 	{
 		//If your getting hit but your not immortal
 		if (!immortal)
@@ -324,7 +410,7 @@ public class NewPlayer : NewCharacters
 			if (!IsDead)
 			{
 				//Determine how much damage the player will take
-				healthStat.CurrentVal -= 10;
+				healthStat.CurrentVal -= dmg;
 
 				//Increase stunmeter with each hit
 				stunMeter += 40;

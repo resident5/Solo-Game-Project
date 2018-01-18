@@ -12,37 +12,31 @@ public class MeleeState : IEnemyState {
 
 	public void Start(NewEnemy enemy)
 	{
+
 		this.enemy = enemy;
 	}
 	public void StateUpdate ()
 	{
-		Attack ();
+		Debug.Log ("In Melee");
 
 		if (enemy.target == null)
 		{
 			enemy.StateChange (new IdleState ());
 		}
 
-		if (NewPlayer.Instance.stunned)
+		if (enemy.target != null && enemy.InMeleeRange && NewPlayer.Instance.stunned)
 		{
-			enemy.StateChange (new AdvantageState());
+			enemy.StateChange (new ChaseState ());
 		}
-			
-//		if (enemy.Target != null)
-//		{
-//			enemy.ChangeState(new )
-//		} else
-//		{
-//			enemy.ChangeState (new IdleState ());
-//
-//		}
+
+		Attack ();
 
 	}
 	public void End()
 	{
 
 	}
-	public void OnTriggerEnter (Collider2D other)
+	public void OnTriggerEnter2D (Collider2D other)
 	{
 
 	}

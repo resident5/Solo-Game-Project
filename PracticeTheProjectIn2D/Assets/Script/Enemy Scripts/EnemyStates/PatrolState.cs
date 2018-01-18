@@ -13,22 +13,25 @@ public class PatrolState : IEnemyState
 
 	public void Start (NewEnemy enemy)
 	{
-		patrolDuration = Random.Range (1, 11);
+
+		patrolDuration = Random.Range (1, 5);
+		patrolTimer = 0;
+
 		this.enemy = enemy;
+
 	}
 
 	public void StateUpdate ()
 	{
-		if (!enemy.InMeleeRange)
+
+		if (enemy.target != null && enemy.canSex)
 		{
-			Patrol ();
-			enemy.Move ();
+			enemy.StateChange (new ChaseState ());
 		}
 
-		if (enemy.target != null && enemy.InMeleeRange)
-		{
-			enemy.StateChange (new MeleeState ());
-		}
+		Patrol ();
+		enemy.Move ();
+
 
 
 	}
@@ -38,12 +41,18 @@ public class PatrolState : IEnemyState
 
 	}
 
-	public void OnTriggerEnter (Collider2D other)
+	public void OnTriggerEnter2D (Collider2D other)
 	{
 		if (other.tag == "Edge")
 		{
 			enemy.ChangeDirection ();
 		}
+
+//		if (other.gameObject.tag == "Player" && NewPlayer.Instance.stunned)
+//		{
+//			Debug.Log ("HERE I COME");
+//			enemy.StateChange (new AdvantageState ());
+//		}
 	}
 
 	public void OnCollisionEnter2D (Collision2D other)
@@ -52,6 +61,8 @@ public class PatrolState : IEnemyState
 		{
 			enemy.ChangeDirection ();
 		}
+
+
 	}
 
 	private void Patrol ()
@@ -61,6 +72,7 @@ public class PatrolState : IEnemyState
 
 		if (patrolTimer >= patrolDuration)
 		{
+			enemy.ChangeDirection ();
 			enemy.StateChange (new IdleState ());
 		}
 	}

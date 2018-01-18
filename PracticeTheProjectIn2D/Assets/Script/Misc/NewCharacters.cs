@@ -9,7 +9,7 @@ public abstract class NewCharacters : MonoBehaviour
 	public float speed;
 	public int damage;
 
-	protected bool facingRight;
+	public bool facingRight;
 
 	public SpriteRenderer sprite;
 
@@ -29,13 +29,12 @@ public abstract class NewCharacters : MonoBehaviour
 
 	public Animator animator;
 
-	public IStatusEffects status = null;
+	public List<IStatusEffects> status;
 
 	[SerializeField]
 	private List<Collider2D> damageSources;
 
 	public Collider2D attackCollider;
-
 
 	public virtual void Start ()
 	{
@@ -64,8 +63,8 @@ public abstract class NewCharacters : MonoBehaviour
 		//If I was by a damage source 
 		if (damageSources.Contains (other))
 		{
-			Debug.Log ("Hitting " + this);
-			StartCoroutine (TakeDamage (damage));
+			NewCharacters attacker = other.transform.parent.GetComponent<NewCharacters> ();
+			StartCoroutine (TakeDamage (attacker.damage));
 		}
 	}
 
