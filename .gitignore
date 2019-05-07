@@ -1,9 +1,10 @@
-/[Ll]ibrary/
-/[Tt]emp/
-/[Oo]bj/
-/[Bb]uild/
-/[Bb]uilds/
-/Assets/AssetStoreTools*
+PracticeTheProjectIn2D/[Ll]ibrary/
+PracticeTheProjectIn2D/[Tt]emp/
+PracticeTheProjectIn2D/[Oo]bj/
+PracticeTheProjectIn2D/[Bb]uild/
+PracticeTheProjectIn2D/[Bb]uilds/
+PracticeTheProjectIn2D/Library/
+PracticeTheProjectIn2D/Assets/AssetStoreTools*
 
 # Visual Studio 2015 cache directory
 /.vs/
@@ -32,3 +33,6 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+/PracticeTheProjectIn2D/ProjectSettings
+/PracticeTheProjectIn2D/Packages
+/PracticeTheProjectIn2D/Logs
