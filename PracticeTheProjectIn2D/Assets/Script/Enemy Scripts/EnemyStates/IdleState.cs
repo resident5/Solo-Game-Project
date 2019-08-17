@@ -22,7 +22,7 @@ public class IdleState : IEnemyState
 
 	public void StateUpdate ()
 	{
-		Debug.Log ("IN IDLE");
+		//Debug.Log ("IN IDLE");
 
 		if (enemy.target != null)
 		{

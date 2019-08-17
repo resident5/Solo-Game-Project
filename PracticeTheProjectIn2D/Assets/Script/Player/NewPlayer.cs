@@ -108,8 +108,10 @@ public class NewPlayer : NewCharacters
 
     #endregion
 
-    public Attack starting;
-    public int currentAttack;
+    public Attack startingAttack;
+
+    public Attack currentAttack;
+    public int currentAttackIndex;
     NewEnemy attacker;
 
     public bool beingUsed;
@@ -184,16 +186,6 @@ public class NewPlayer : NewCharacters
 
     void PlayerInput()
     {
-        //		if (Input.GetKeyDown (KeyboardInputs.Instance.keybinder["LEFT"]) && stunned)
-        //		{
-        //			struggle += 0.2f;
-        //		}
-        //
-        //		if (Input.GetKeyDown (KeyboardInputs.Instance.keybinder["RIGHT"]) && stunned)
-        //		{
-        //			struggle += 0.2f;
-        //		}
-        //
         if (Input.GetKeyDown(KeyCode.P))
         {
             ui = Instantiate(pregInfo, worldCanvas.transform).transform;
@@ -207,9 +199,26 @@ public class NewPlayer : NewCharacters
 
         if (Input.GetKeyDown(KeyboardInputs.Instance.keybinder["ATTACK"]))
         {
-            animator.SetTrigger(starting.getTriggerName() + currentAttack);
-            animator.SetInteger("attackIndex", currentAttack++);
-            currentAttack++;
+            //Debug.Log("Current attack = " + currentAttack.name + " index = " + currentAttackIndex);
+
+
+            if (currentAttack != null)
+            {
+                animator.Play(currentAttack.name);
+
+                if (currentAttack.nextAttack != null)
+                {
+                    currentAttack = currentAttack.nextAttack;
+                }
+                else
+                {
+                    currentAttack = startingAttack;
+                    currentAttackIndex = 0;
+                }
+
+                //animator.SetTrigger(currentAttack.getTriggerName());
+                //animator.SetInteger("attackIndex", currentAttackIndex++);
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha1))

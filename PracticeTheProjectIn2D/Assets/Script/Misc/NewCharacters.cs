@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public abstract class NewCharacters : MonoBehaviour
 {
@@ -29,7 +30,10 @@ public abstract class NewCharacters : MonoBehaviour
 
 	public Animator animator;
 
-	public List<IStatusEffects> status;
+    public AudioSource soundSource;
+    public AudioClip[] hitSounds;
+
+    public List<IStatusEffects> status;
 
 	[SerializeField]
 	private List<Collider2D> damageSources;
@@ -60,10 +64,14 @@ public abstract class NewCharacters : MonoBehaviour
 
 		//other == PlayerSword
 
-		//If I was by a damage source 
+		//If I was hit by a damage source 
 		if (damageSources.Contains (other))
 		{
 			NewCharacters attacker = other.transform.parent.GetComponent<NewCharacters> ();
+            if(attacker.hitSounds != null)
+            {
+                soundSource.PlayOneShot(attacker.hitSounds[Random.Range(0, hitSounds.Length)]);
+            }
 			StartCoroutine (TakeDamage (attacker.damage));
 		}
 	}

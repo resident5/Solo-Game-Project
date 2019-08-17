@@ -18,6 +18,7 @@ public class Attack : ScriptableObject
 
     public Attack getNextCombo()
     {
+        Debug.Log("Attack " + triggerName);
         return nextAttack;
     }
 
@@ -25,6 +26,7 @@ public class Attack : ScriptableObject
     {
         return triggerName;
     }
+
 }
 
 

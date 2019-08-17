@@ -32,7 +32,7 @@ public class AttackBehaviour : StateMachineBehaviour
 		animator.GetComponent<NewCharacters> ().attack = false;
 		animator.GetComponent<NewCharacters> ().Attack ();
 		animator.GetComponent<NewCharacters> ().attackCollider.enabled = false;
-		animator.ResetTrigger (NewPlayer.Instance.starting.getTriggerName() + NewPlayer.Instance.currentAttack);
+		animator.ResetTrigger (NewPlayer.Instance.currentAttack.getTriggerName() + NewPlayer.Instance.currentAttackIndex);
 
 		
 	}
