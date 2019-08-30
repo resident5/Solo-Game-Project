@@ -107,17 +107,22 @@ public class NewEnemy : NewCharacters
 
 	#region OnTrigger Methods
 
-	public override void OnTriggerEnter2D (Collider2D other)
-	{
-		base.OnTriggerEnter2D (other);
-		currentState.OnTriggerEnter2D (other);
-	}
+	//public override void OnTriggerEnter2D (Collider2D other)
+	//{
+	//	base.OnTriggerEnter2D (other);
+	//	currentState.OnTriggerEnter2D (other);
+	//}
 
-	#endregion
+    public override void OnCollisionEnter2D(Collision2D collision)
+    {
+        base.OnCollisionEnter2D(collision);
+    }
 
-	#region Do Not Touch Methods
+    #endregion
 
-	public void Move ()
+    #region Do Not Touch Methods
+
+    public void Move ()
 	{
 		if (!attack)
 		{

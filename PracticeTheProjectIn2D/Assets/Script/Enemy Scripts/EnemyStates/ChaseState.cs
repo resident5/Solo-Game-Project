@@ -16,7 +16,7 @@ public class ChaseState : IEnemyState
 
 	public void StateUpdate ()
 	{
-		Debug.Log ("Chasing");
+		//Debug.Log ("Chasing");
 
 		if (enemy.target != null && enemy.InMeleeRange && !NewPlayer.Instance.stunned)
 		{
@@ -42,10 +42,10 @@ public class ChaseState : IEnemyState
 		Collider2D col = enemy.transform.Find ("Enemy_Sight").GetComponent<BoxCollider2D> ();
 
 		//This should return MagmaDoll and should go to advantage state immediately
-		Debug.Log (col.name);
+		//Debug.Log (col.name);
 		if (other.gameObject.tag == "Player" && NewPlayer.Instance.stunned && col.name != "Enemy_Sight")
 		{
-			Debug.Log ("HERE I COME");
+			//Debug.Log ("HERE I COME");
 			enemy.StateChange (new AdvantageState ());
 		}
 	}

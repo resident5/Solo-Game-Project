@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 224665830059359194}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: EnemyHealth
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -49,7 +49,7 @@ GameObject:
   - component: {fileID: 4336232549194608}
   - component: {fileID: 61418080568217788}
   - component: {fileID: 114694616624553150}
-  m_Layer: 10
+  m_Layer: 8
   m_Name: Enemy_Sight
   m_TagString: EnemySight
   m_Icon: {fileID: 0}
@@ -121,7 +121,7 @@ GameObject:
   - component: {fileID: 223099509081636258}
   - component: {fileID: 114849676172635650}
   - component: {fileID: 114862986397173342}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: EnemyHealthUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -222,7 +222,7 @@ GameObject:
   - component: {fileID: 114598821634953028}
   - component: {fileID: 114357939353334204}
   - component: {fileID: 114844154789031852}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: EnemyHPBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -325,7 +325,7 @@ GameObject:
   - component: {fileID: 224488925142277172}
   - component: {fileID: 222284893210961456}
   - component: {fileID: 114435393445233064}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: Health
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -406,7 +406,7 @@ GameObject:
   - component: {fileID: 114339599030376840}
   - component: {fileID: 114139698890575466}
   - component: {fileID: 114806158413064962}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: Bar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -511,7 +511,7 @@ GameObject:
   - component: {fileID: 222603727139075752}
   - component: {fileID: 114177853990561764}
   - component: {fileID: 114181042602091218}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: EmptyBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -604,7 +604,8 @@ GameObject:
   - component: {fileID: 95205873503901980}
   - component: {fileID: 114533704110191364}
   - component: {fileID: 114743598976967404}
-  m_Layer: 12
+  - component: {fileID: 1328524876}
+  m_Layer: 8
   m_Name: MagmaDoll
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -618,7 +619,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1433353110118034}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -3.31, y: 0.68, z: 3.2265625}
   m_LocalScale: {x: 0.16508107, y: 0.16508107, z: 0.16508107}
   m_Children:
@@ -733,7 +734,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -807,9 +808,11 @@ MonoBehaviour:
   stunned: 0
   grabbled: 0
   animator: {fileID: 0}
+  soundSource: {fileID: 0}
+  hitSounds: []
   status: []
-  damageSources:
-  - {fileID: 0}
+  damageSourcesTags:
+  - Sword
   attackCollider: {fileID: 68734084245589784}
   col: {fileID: 61325652573977334}
   myRigidBody: {fileID: 50945733854754912}
@@ -826,6 +829,102 @@ MonoBehaviour:
   canSex: 0
   sexCooldown: 8
   timeStampCD: 0
+--- !u!82 &1328524876
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1433353110118034}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 4e1999ef24ded334db081705c222e2eb, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1474519662538366
 GameObject:
   m_ObjectHideFlags: 0
@@ -836,7 +935,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4970695936227800}
   - component: {fileID: 68734084245589784}
-  m_Layer: 11
+  m_Layer: 8
   m_Name: EnemyFist
   m_TagString: EnemyAttack
   m_Icon: {fileID: 0}
@@ -905,7 +1004,7 @@ GameObject:
   - component: {fileID: 224433634532155396}
   - component: {fileID: 222598024238242252}
   - component: {fileID: 114205855864698684}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: FullBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -980,7 +1079,7 @@ GameObject:
   - component: {fileID: 222806563103939816}
   - component: {fileID: 114487295047592156}
   - component: {fileID: 114338547465244534}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: EmptyHpBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1068,7 +1167,7 @@ GameObject:
   - component: {fileID: 224242860727578728}
   - component: {fileID: 222435136917094760}
   - component: {fileID: 114470975849821744}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: HPGraphic
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1143,7 +1242,7 @@ GameObject:
   - component: {fileID: 224821703053667516}
   - component: {fileID: 222026815010910582}
   - component: {fileID: 114677992792550940}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1220,7 +1319,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 224670145357846362}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: StruggleBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1258,7 +1357,7 @@ GameObject:
   - component: {fileID: 224566007440710472}
   - component: {fileID: 222359967854461800}
   - component: {fileID: 114763664863258526}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: Name
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -1337,7 +1436,7 @@ GameObject:
   - component: {fileID: 224518996121110164}
   - component: {fileID: 222196894205943638}
   - component: {fileID: 114645377690761290}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: RealHPBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}

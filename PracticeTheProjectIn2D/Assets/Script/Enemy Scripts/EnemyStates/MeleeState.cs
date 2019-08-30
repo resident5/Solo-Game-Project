@@ -17,7 +17,7 @@ public class MeleeState : IEnemyState {
 	}
 	public void StateUpdate ()
 	{
-		Debug.Log ("In Melee");
+		//Debug.Log ("In Melee");
 
 		if (enemy.target == null)
 		{

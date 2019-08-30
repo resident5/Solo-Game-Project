@@ -31,10 +31,10 @@ public class NewPlayer : NewCharacters
     public Rigidbody2D myRigidbody;
 
     [SerializeField]
-    private Collider2D col1;
+    protected Collider2D col1;
 
     [SerializeField]
-    private Collider2D col2;
+    protected Collider2D col2;
 
     #endregion
 
@@ -68,34 +68,31 @@ public class NewPlayer : NewCharacters
     #region Player forces
     [Header("Player Forces")]
 
-    [SerializeField]
-    private float jumpForce;
+    [SerializeField] private float jumpForce;
 
-    [SerializeField]
-    private float bounceForce;
+    [SerializeField] private float bounceForce;
 
-    [SerializeField]
-    private float dashForce;
+    [SerializeField] private float dashForce;
 
-    [SerializeField]
-    private float knockBackForce;
+    [SerializeField] private float knockBackForce;
+
+    [SerializeField] private float fallMultiplier = 2.5f;
+    [SerializeField] private float jumpMultiplier = 2f;
+
 
     #endregion
 
     [Space]
     #region Inputs
     [Header("Inputs")]
-    [SerializeField]
-    private float buttonInputLag;
 
-    [SerializeField]
-    private int rightDashCounter;
+    [SerializeField] private float buttonInputLag;
 
-    [SerializeField]
-    private int leftDashCounter;
+    [SerializeField] private int rightDashCounter;
 
-    [SerializeField]
-    private float immortalTime;
+    [SerializeField] private int leftDashCounter;
+
+    [SerializeField] private float immortalTime;
 
     #endregion
 
@@ -107,6 +104,10 @@ public class NewPlayer : NewCharacters
     #endregion
 
     #endregion
+
+    [SerializeField] private AdvancedJump advancedJump;
+
+    public GameObject hitbox;
 
     public Attack startingAttack;
 
@@ -138,6 +139,13 @@ public class NewPlayer : NewCharacters
     void Update()
     {
         PlayerInput();
+
+        if (jump && myRigidbody.velocity.y == 0) //if the player pressed jump key and they are not moving vertically
+        {
+            Debug.Log("JUMP");
+            advancedJump.Jump(fallMultiplier, jumpMultiplier);
+            myRigidbody.AddForce(new Vector2(0, jumpForce));
+        }
 
         if (beingUsed)
         {
@@ -194,30 +202,22 @@ public class NewPlayer : NewCharacters
         if (Input.GetKeyDown(KeyboardInputs.Instance.keybinder["JUMP"]))
         {
             animator.SetTrigger("jump");
-
         }
 
         if (Input.GetKeyDown(KeyboardInputs.Instance.keybinder["ATTACK"]))
         {
-            //Debug.Log("Current attack = " + currentAttack.name + " index = " + currentAttackIndex);
 
-
-            if (currentAttack != null)
+            animator.Play(currentAttack.name); // Plays animation
+            Attack(); // Creates hitbox
+            if (currentAttack.nextAttack != null)
             {
-                animator.Play(currentAttack.name);
+                currentAttack = currentAttack.nextAttack; // Changes to next attack
 
-                if (currentAttack.nextAttack != null)
-                {
-                    currentAttack = currentAttack.nextAttack;
-                }
-                else
-                {
-                    currentAttack = startingAttack;
-                    currentAttackIndex = 0;
-                }
-
-                //animator.SetTrigger(currentAttack.getTriggerName());
-                //animator.SetInteger("attackIndex", currentAttackIndex++);
+            }
+            else
+            {
+                currentAttack = startingAttack;
+                currentAttackIndex = 0;
             }
         }
 
@@ -252,6 +252,7 @@ public class NewPlayer : NewCharacters
 
         }
 
+
         //		if (Input.GetKeyDown (KeyCode.RightArrow))
         //		{
         //			rightDashCounter += 1;
@@ -282,13 +283,6 @@ public class NewPlayer : NewCharacters
             animator.SetBool("land", true);
             jump = false;
         }
-
-        if (jump && myRigidbody.velocity.y == 0) //if the player pressed jump key and they are not moving vertically
-        {
-            myRigidbody.AddForce(new Vector2(0, jumpForce));
-        }
-
-
 
         Turn(move);
 
@@ -332,7 +326,69 @@ public class NewPlayer : NewCharacters
         ui.position = infoMarkerTarget.position;
     }
 
-    #region DO NOT TOUCH METHODS
+    //void Cancel()
+    //{
+    //    animator.GetComponent<NewCharacters>().attack = false;
+    //    animator.GetComponent<NewCharacters>().attackCollider.enabled = false;
+    //}
+
+    #region Override Methods
+
+    public override void Attack()
+    {
+        GameObject hBox = Instantiate(hitbox, transform);
+        Hitbox hurtbox = hBox.GetComponent<Hitbox>();
+
+        if (hurtbox != null)
+        {
+            hurtbox.attacker = this;
+            hurtbox.damage = damage;
+        }
+
+        //attackCollider.enabled = true;
+        //Vector3 tmpPos = attackCollider.transform.position;
+        //attackCollider.transform.position = new Vector3(attackCollider.transform.position.x + 0, 01, attackCollider.transform.position.y);
+        //attackCollider.transform.position = tmpPos;
+    }
+
+
+
+    public override IEnumerator TakeDamage(int dmg)
+    {
+        //If your getting hit but your not immortal
+        if (!immortal)
+        {
+            //If you got hit but your not dead or immortal
+            if (!IsDead)
+            {
+                //Determine how much damage the player will take
+                healthStat.CurrentVal -= dmg;
+
+                //Increase stunmeter with each hit
+                stunMeter += 40;
+
+                //Animate after the hit
+                animator.SetTrigger("damage");
+
+                //Set immortal to true to avoid getting spammed
+                //Make the player sprite flash on and off for the duration of their invuln
+
+                immortal = true;
+                StartCoroutine(IndicateImmortal());
+                yield return new WaitForSeconds(immortalTime);
+                immortal = false;
+
+            }
+            else //Otherwise if your not immortal but you are dead
+            {
+                Death();
+            }
+        }
+    }
+
+    #endregion
+
+    #region InfoMethods
 
     private bool IsGrounded()
     {
@@ -420,54 +476,7 @@ public class NewPlayer : NewCharacters
 
     #endregion
 
-    #region Override Methods
-
-    public override void Attack()
-    {
-        attackCollider.enabled = !attackCollider.enabled;
-        Vector3 tmpPos = attackCollider.transform.position;
-        attackCollider.transform.position = new Vector3(attackCollider.transform.position.x + 0, 01, attackCollider.transform.position.y);
-        attackCollider.transform.position = tmpPos;
-
-    }
-
-    public override IEnumerator TakeDamage(int dmg)
-    {
-        //If your getting hit but your not immortal
-        if (!immortal)
-        {
-            //If you got hit but your not dead or immortal
-            if (!IsDead)
-            {
-                //Determine how much damage the player will take
-                healthStat.CurrentVal -= dmg;
-
-                //Increase stunmeter with each hit
-                stunMeter += 40;
-
-                //Animate after the hit
-                animator.SetTrigger("damage");
-
-                //Set immortal to true to avoid getting spammed
-                //Make the player sprite flash on and off for the duration of their invuln
-
-                immortal = true;
-                StartCoroutine(IndicateImmortal());
-                yield return new WaitForSeconds(immortalTime);
-                immortal = false;
-
-            }
-            else //Otherwise if your not immortal but you are dead
-            {
-                Death();
-            }
-        }
-    }
-
-    #endregion
-
     #region Colliders
-
     private void turnOffColliders()
     {
         col1.enabled = false;
@@ -486,6 +495,5 @@ public class NewPlayer : NewCharacters
         myRigidbody.isKinematic = false;
 
     }
-
     #endregion
 }
