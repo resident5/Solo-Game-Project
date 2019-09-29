@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
+using System;
 
 public abstract class NewCharacters : MonoBehaviour
 {
@@ -30,8 +31,8 @@ public abstract class NewCharacters : MonoBehaviour
 
     public Animator animator;
 
-    [SerializeField] protected AudioSource soundSource;
-    [SerializeField] protected AudioClip[] hitSounds;
+    [SerializeField] public AudioSource soundSource;
+    [SerializeField] public AudioClip[] hitSounds;
 
     public List<IStatusEffects> status;
 
@@ -60,33 +61,39 @@ public abstract class NewCharacters : MonoBehaviour
 
     public virtual void OnTriggerEnter2D(Collider2D other)
     {
-        if (damageSourcesTags.Contains(other.gameObject.tag))
+        try
         {
             NewCharacters attacker = other.transform.parent.GetComponent<NewCharacters>();
-            AudioClip clip = attacker.hitSounds[Random.Range(0, hitSounds.Length)];
-            attacker.soundSource.PlayOneShot(clip);
-            StartCoroutine(TakeDamage(attacker.damage));
+
+            if (attacker != null)
+            {
+                AudioClip clip = attacker.hitSounds[UnityEngine.Random.Range(0, attacker.hitSounds.Length)];
+                attacker.soundSource.PlayOneShot(clip);
+                StartCoroutine(TakeDamage(attacker.damage));
+            }
+
+        }
+        catch (NullReferenceException e)
+        {
+            Debug.LogWarning("Null refence exception " + e.StackTrace);
         }
     }
 
-    public virtual void OnCollisionEnter2D(Collision2D other)
-    {
-        if (damageSourcesTags.Contains(other.gameObject.tag))
-        {
-            NewCharacters attacker = other.transform.parent.GetComponent<NewCharacters>();
-            AudioClip clip = attacker.hitSounds[Random.Range(0, hitSounds.Length)];
-            attacker.soundSource.PlayOneShot(clip);
-            StartCoroutine(TakeDamage(attacker.damage));
-        }
-    }
+    //public virtual void OnCollisionEnter2D(Collision2D other)
+    //{
+    //    if (damageSourcesTags.Contains(other.gameObject.tag))
+    //    {
+    //        NewCharacters attacker = other.transform.parent.GetComponent<NewCharacters>();
+    //        AudioClip clip = attacker.hitSounds[Random.Range(0, hitSounds.Length)];
+    //        attacker.soundSource.PlayOneShot(clip);
+    //        StartCoroutine(TakeDamage(attacker.damage));
+    //    }
+    //}
 
     #region All the things both player and enemy should do but differently
 
     //Methods for determining the damage the character will take
     public abstract IEnumerator TakeDamage(int x);
-
-    //Methods for how much damage the character will deal
-    public abstract void Attack();
 
     #endregion
 }

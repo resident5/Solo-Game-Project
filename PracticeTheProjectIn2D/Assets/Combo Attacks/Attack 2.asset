@@ -16,4 +16,5 @@ MonoBehaviour:
   animation: {fileID: 7400000, guid: b856189b6c3721d43aea0479cb583483, type: 2}
   triggerName: attack
   requiredInputKey: 122
+  attackRange: 2
   nextAttack: {fileID: 0}

@@ -7,12 +7,13 @@ using UnityEngine;
 public class Attack : ScriptableObject
 {
     public int damage;
-
     public AnimationClip animation;
 
     public string triggerName;
 
     public KeyCode requiredInputKey;
+
+    public float attackRange;
 
     public Attack nextAttack;
 

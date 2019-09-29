@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class Hitbox : MonoBehaviour
 {
-    public NewCharacters attacker;
+    public NewPlayer player;
+
+    [SerializeField] ParticleSystem specialEffect;
 
     public int numberOfHits;
 
@@ -20,34 +22,10 @@ public class Hitbox : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-
+        Debug.Log("Other tag " + other.gameObject.tag);
         if (other.gameObject.tag == "Enemy")
         {
-            var victim = other.GetComponent<NewCharacters>();
-
-            if (victim != null)
-            {
-                if (victim.damageSourcesTags.Contains(other.gameObject.tag))
-                {
-                    victim.TakeDamage(attacker.damage);
-                }
-            }
-        }
-    }
-
-    private void OnCollisionEnter2D(Collision2D other)
-    {
-        if (other.gameObject.tag == "Enemy")
-        {
-            var victim = other.gameObject.GetComponent<NewCharacters>();
-
-            if (victim != null)
-            {
-                if (victim.damageSourcesTags.Contains(other.gameObject.tag))
-                {
-                    victim.TakeDamage(attacker.damage);
-                }
-            }
+            Instantiate(specialEffect.gameObject, player.gameObject.transform);
         }
     }
 

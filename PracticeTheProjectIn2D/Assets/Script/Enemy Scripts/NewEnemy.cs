@@ -20,6 +20,8 @@ public class NewEnemy : NewCharacters
 	[SerializeField]
 	private float enemyReactionTime;
 
+    public GameObject enemySight;
+
 	public float meleeRange;
 
 	public bool InMeleeRange
@@ -38,9 +40,12 @@ public class NewEnemy : NewCharacters
 	public IEnemyState currentState;
 
 
-	#endregion
+    #endregion
 
-	public Stat struggleBar;
+    public GameObject sight;
+
+
+    public Stat struggleBar;
 
 	public GameObject myStuggleBar;
 
@@ -59,7 +64,11 @@ public class NewEnemy : NewCharacters
 	public override void Start ()
 	{
 		base.Start ();
-		StateChange (new IdleState ());
+
+        sight = Instantiate(enemySight);
+        sight.GetComponent<EnemySight>().enemy = this;
+
+        StateChange(new IdleState ());
 
 		healthCanvas = transform.GetComponentInChildren<Canvas> ().transform.Find ("EnemyHealth").gameObject;
 		myStuggleBar = transform.GetComponentInChildren<Canvas> ().transform.Find ("StruggleBar").gameObject;
@@ -93,6 +102,11 @@ public class NewEnemy : NewCharacters
 
 	}
 
+    void LateUpdate()
+    {
+        EnemySight();
+    }
+
 	public void StateChange (IEnemyState newEnemyState)
 	{
 		if (currentState != null)
@@ -105,18 +119,23 @@ public class NewEnemy : NewCharacters
 
 	}
 
-	#region OnTrigger Methods
-
-	//public override void OnTriggerEnter2D (Collider2D other)
-	//{
-	//	base.OnTriggerEnter2D (other);
-	//	currentState.OnTriggerEnter2D (other);
-	//}
-
-    public override void OnCollisionEnter2D(Collision2D collision)
+    void EnemySight()
     {
-        base.OnCollisionEnter2D(collision);
+        sight.transform.position = transform.position;
     }
+
+    #region OnTrigger Methods
+
+    public override void OnTriggerEnter2D (Collider2D other)
+	{
+		base.OnTriggerEnter2D (other);
+		currentState.OnTriggerEnter2D (other);
+	}
+
+    //public override void OnCollisionEnter2D(Collision2D collision)
+    //{
+    //    base.OnCollisionEnter2D(collision);
+    //}
 
     #endregion
 
@@ -166,7 +185,7 @@ public class NewEnemy : NewCharacters
 
 	}
 
-	public override void Attack ()
+	public void Attack ()
 	{
 		attackCollider.enabled = !attackCollider.enabled;
 		Vector3 tmpPos = attackCollider.transform.position;
@@ -186,6 +205,7 @@ public class NewEnemy : NewCharacters
 		{
 			yield return null;
 
+            Debug.Log("DAMAGED ENEMY???");
 			healthStat.CurrentVal -= dmg;
 			animator.SetTrigger ("damage");
 

@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 57333814}
   - component: {fileID: 57333813}
   - component: {fileID: 57333817}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Platform
   m_TagString: Floor
   m_Icon: {fileID: 0}
@@ -561,18 +561,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!58 &1042541881 stripped
-CircleCollider2D:
-  m_CorrespondingSourceObject: {fileID: 58071943905369928, guid: 6b56c372f029d7b409a2cd9764df4ccd,
-    type: 3}
-  m_PrefabInstance: {fileID: 1312248775}
-  m_PrefabAsset: {fileID: 0}
---- !u!61 &1042541882 stripped
-BoxCollider2D:
-  m_CorrespondingSourceObject: {fileID: 61312539859048224, guid: 6b56c372f029d7b409a2cd9764df4ccd,
-    type: 3}
-  m_PrefabInstance: {fileID: 1312248775}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1068007513
 GameObject:
   m_ObjectHideFlags: 0
@@ -800,20 +788,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 114533704110191364, guid: 56455e73aba41a944bc157e029fc8dd7,
+    - target: {fileID: 6473617706407675529, guid: 56455e73aba41a944bc157e029fc8dd7,
         type: 3}
-      propertyPath: other
-      value: 
-      objectReference: {fileID: 1042541882}
-    - target: {fileID: 114533704110191364, guid: 56455e73aba41a944bc157e029fc8dd7,
-        type: 3}
-      propertyPath: otherC
-      value: 
-      objectReference: {fileID: 1042541881}
-    - target: {fileID: 61682908340560884, guid: 56455e73aba41a944bc157e029fc8dd7,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
+      propertyPath: m_TagString
+      value: Enemy
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 56455e73aba41a944bc157e029fc8dd7, type: 3}
@@ -917,7 +895,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4532676089239796, guid: 6b56c372f029d7b409a2cd9764df4ccd, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.08526039
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4532676089239796, guid: 6b56c372f029d7b409a2cd9764df4ccd, type: 3}
       propertyPath: m_LocalRotation.x
@@ -953,11 +931,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 114373631646417634, guid: 6b56c372f029d7b409a2cd9764df4ccd,
         type: 3}
-      propertyPath: damageSourcesTags.Array.size
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114373631646417634, guid: 6b56c372f029d7b409a2cd9764df4ccd,
-        type: 3}
       propertyPath: healthStat.bar
       value: 
       objectReference: {fileID: 1484465030}
@@ -971,6 +944,10 @@ PrefabInstance:
       propertyPath: worldCanvas
       value: 
       objectReference: {fileID: 1173020739}
+    - target: {fileID: 1541865711, guid: 6b56c372f029d7b409a2cd9764df4ccd, type: 3}
+      propertyPath: camAnim
+      value: 
+      objectReference: {fileID: 1610789878}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6b56c372f029d7b409a2cd9764df4ccd, type: 3}
 --- !u!1 &1401031267
@@ -1233,7 +1210,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1542066111}
   - component: {fileID: 1542066110}
-  - component: {fileID: 1542066109}
   - component: {fileID: 1542066108}
   - component: {fileID: 1542066107}
   - component: {fileID: 1542066112}
@@ -1253,14 +1229,6 @@ AudioListener:
   m_GameObject: {fileID: 1542066106}
   m_Enabled: 1
 --- !u!124 &1542066108
-Behaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1542066106}
-  m_Enabled: 1
---- !u!92 &1542066109
 Behaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1319,11 +1287,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1542066106}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -18, y: 4, z: -10}
-  m_LocalScale: {x: 4.08459, y: 1.0500005, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_Father: {fileID: 1610789877}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1542066112
 MonoBehaviour:
@@ -1337,11 +1305,61 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 327654d4438b81e40a105ab18070acef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xMin: -14
-  xMax: 14
-  yMin: 4
-  yMax: 20
+  minClamp: {x: -14, y: 4, z: -10}
+  maxClamp: {x: 14, y: 20, z: -5}
   player: {fileID: 1675065018}
+  offset: {x: 0, y: 4, z: 0}
+--- !u!1 &1610789876
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1610789877}
+  - component: {fileID: 1610789878}
+  m_Layer: 0
+  m_Name: Camera Parent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1610789877
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1610789876}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -18, y: 4, z: -10}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1542066111}
+  m_Father: {fileID: 0}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &1610789878
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1610789876}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 2938d9c3ffca24446ae3d5f161649b9e, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!4 &1675065018 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4532676089239796, guid: 6b56c372f029d7b409a2cd9764df4ccd,
@@ -1393,7 +1411,7 @@ GameObject:
   - component: {fileID: 1949502975}
   - component: {fileID: 1949502973}
   - component: {fileID: 1949502974}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Floor
   m_TagString: Floor
   m_Icon: {fileID: 0}

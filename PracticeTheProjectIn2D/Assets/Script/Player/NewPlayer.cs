@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -59,6 +60,7 @@ public class NewPlayer : NewCharacters
     [SerializeField]
     private LayerMask groundMask;
 
+    [SerializeField]
     private int stunMeter;
     private int stunMeterMax = 100;
 
@@ -140,13 +142,6 @@ public class NewPlayer : NewCharacters
     {
         PlayerInput();
 
-        if (jump && myRigidbody.velocity.y == 0) //if the player pressed jump key and they are not moving vertically
-        {
-            Debug.Log("JUMP");
-            advancedJump.Jump(fallMultiplier, jumpMultiplier);
-            myRigidbody.AddForce(new Vector2(0, jumpForce));
-        }
-
         if (beingUsed)
         {
             Collider2D[] col = Physics2D.OverlapCircleAll(transform.position, 3f);
@@ -156,29 +151,6 @@ public class NewPlayer : NewCharacters
                 if (o.GetComponent<NewEnemy>() != null && o.GetComponent<NewEnemy>().usePlayer)
                 {
                     attacker = o.GetComponent<NewEnemy>();
-                }
-            }
-        }
-    }
-
-    void FixedUpdate()
-    {
-        //You can move if
-        if (!IsDead)  //You're not dead
-        {
-            if (!damaged) //You're not taking damage
-            {
-                if (!stunned) //You're not stunned
-                {
-                    float move = Input.GetAxis("Horizontal");
-
-                    OnGround = IsGrounded();
-
-                    PlayerMovement(move);
-
-                    ChangeLayerWeight();
-
-                    Stun();
                 }
             }
         }
@@ -192,6 +164,24 @@ public class NewPlayer : NewCharacters
         }
     }
 
+    void FixedUpdate()
+    {
+        if (!IsDead || !stunned || !damaged)
+        {
+
+            float move = Input.GetAxis("Horizontal");
+
+            OnGround = IsGrounded();
+
+            PlayerMovement(move);
+
+            ChangeLayerWeight();
+
+            Stun();
+
+        }
+    }
+
     void PlayerInput()
     {
         if (Input.GetKeyDown(KeyCode.P))
@@ -202,23 +192,6 @@ public class NewPlayer : NewCharacters
         if (Input.GetKeyDown(KeyboardInputs.Instance.keybinder["JUMP"]))
         {
             animator.SetTrigger("jump");
-        }
-
-        if (Input.GetKeyDown(KeyboardInputs.Instance.keybinder["ATTACK"]))
-        {
-
-            animator.Play(currentAttack.name); // Plays animation
-            Attack(); // Creates hitbox
-            if (currentAttack.nextAttack != null)
-            {
-                currentAttack = currentAttack.nextAttack; // Changes to next attack
-
-            }
-            else
-            {
-                currentAttack = startingAttack;
-                currentAttackIndex = 0;
-            }
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -252,28 +225,12 @@ public class NewPlayer : NewCharacters
 
         }
 
-
-        //		if (Input.GetKeyDown (KeyCode.RightArrow))
-        //		{
-        //			rightDashCounter += 1;
-        //
-        //			if (rightDashCounter > 1)
-        //			{
-        //				myRigidbody.AddForce (new Vector2 (dashForce, 0f));
-        //			}
-        //		}
-        //
-        //		if (Input.GetKeyDown (KeyCode.LeftArrow))
-        //		{
-        //			leftDashCounter += 1;
-        //
-        //			if (leftDashCounter > 1)
-        //			{
-        //				myRigidbody.AddForce (new Vector2 (-dashForce, 0f));
-        //			}
-        //		}
-        //
-
+        if (jump && myRigidbody.velocity.y == 0) //if the player pressed jump key and they are not moving vertically
+        {
+            Debug.Log("JUMP");
+            advancedJump.Jump(fallMultiplier, jumpMultiplier);
+            myRigidbody.AddForce(new Vector2(0, jumpForce));
+        }
     }
 
     void PlayerMovement(float move)
@@ -326,32 +283,7 @@ public class NewPlayer : NewCharacters
         ui.position = infoMarkerTarget.position;
     }
 
-    //void Cancel()
-    //{
-    //    animator.GetComponent<NewCharacters>().attack = false;
-    //    animator.GetComponent<NewCharacters>().attackCollider.enabled = false;
-    //}
-
     #region Override Methods
-
-    public override void Attack()
-    {
-        GameObject hBox = Instantiate(hitbox, transform);
-        Hitbox hurtbox = hBox.GetComponent<Hitbox>();
-
-        if (hurtbox != null)
-        {
-            hurtbox.attacker = this;
-            hurtbox.damage = damage;
-        }
-
-        //attackCollider.enabled = true;
-        //Vector3 tmpPos = attackCollider.transform.position;
-        //attackCollider.transform.position = new Vector3(attackCollider.transform.position.x + 0, 01, attackCollider.transform.position.y);
-        //attackCollider.transform.position = tmpPos;
-    }
-
-
 
     public override IEnumerator TakeDamage(int dmg)
     {
@@ -477,6 +409,13 @@ public class NewPlayer : NewCharacters
     #endregion
 
     #region Colliders
+
+    public override void OnTriggerEnter2D(Collider2D other)
+    {
+        base.OnTriggerEnter2D(other);
+    }
+
+
     private void turnOffColliders()
     {
         col1.enabled = false;

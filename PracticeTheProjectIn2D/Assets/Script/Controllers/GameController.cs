@@ -19,13 +19,16 @@ public class GameController : MonoBehaviour
 			return instance;
 		}
 	}
-	#endregion
+    #endregion
 
-	bool paused = false;
+    NewPlayer mainPlayer;
+
+    bool paused = false;
 
 	void Awake()
 	{
 		DontDestroyOnLoad (this.gameObject);
+        mainPlayer = FindObjectOfType<NewPlayer>();
 	}
 
 	void Start ()

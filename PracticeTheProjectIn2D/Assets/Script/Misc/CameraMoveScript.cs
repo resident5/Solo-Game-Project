@@ -2,30 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraMoveScript : MonoBehaviour {
+public class CameraMoveScript : MonoBehaviour
+{
 
-	[SerializeField]
-	private float xMin;
+    public Vector3 minClamp;
+    public Vector3 maxClamp;
 
-	[SerializeField]
-	private float xMax;
+    public Transform player;
+    public Vector3 offset;
 
-	[SerializeField]
-	private float yMin;
+    void Start()
+    {
+        transform.position = new Vector3(player.transform.position.x, player.transform.position.y, -10);
+    }
 
-	[SerializeField]
-	private float yMax;
-
-	public Transform player;
-
-	// Use this for initialization
-	void Start () {
-		//player = GameObject.Find ("Player").transform;
-	}
-
-	void LateUpdate () {
-		transform.position = new Vector3(Mathf.Clamp(player.position.x,xMin,xMax), 
-			Mathf.Clamp(player.position.y, yMin,yMax), transform.position.z);
-
-	}
+    void LateUpdate()
+    {
+        transform.position = new Vector3(
+            Mathf.Clamp(transform.position.x, minClamp.x, maxClamp.x),
+            Mathf.Clamp(transform.position.y, minClamp.y, maxClamp.y), 
+            transform.position.z);
+    }
 }

@@ -1,5 +1,35 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1421128337
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1421128338}
+  m_Layer: 13
+  m_Name: AttackPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1421128338
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1421128337}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 19.8, y: 0.4, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4532676089239796}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1897723416
 GameObject:
   m_ObjectHideFlags: 0
@@ -79,6 +109,7 @@ GameObject:
   - component: {fileID: 114376025143029462}
   - component: {fileID: 61708217139990238}
   - component: {fileID: 1100452233485501090}
+  - component: {fileID: 1541865711}
   m_Layer: 13
   m_Name: Player
   m_TagString: Player
@@ -101,6 +132,7 @@ Transform:
   - {fileID: 4265444085824752}
   - {fileID: 4345327678065340}
   - {fileID: 1897723417}
+  - {fileID: 1421128338}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -360,8 +392,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 48a8bcfad75ff494ea75c852e30dd32d, type: 3}
   - {fileID: 8300000, guid: 4e1999ef24ded334db081705c222e2eb, type: 3}
   status: []
-  damageSourcesTags:
-  - EnemyAttack
+  damageSourcesTags: []
   damageTargetsTags: []
   attackCollider: {fileID: 0}
   myRigidbody: {fileID: 0}
@@ -378,6 +409,7 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 256
+  stunMeter: 0
   jumpForce: 300
   bounceForce: 0
   dashForce: 10000
@@ -451,6 +483,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c959846565c2b84d8fa829787cd5060, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1541865711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1272400531057692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e595221fdf145e4c8e8efef4d3efc61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeBtwAttack: 0
+  startTimeBtwAttack: 0.3
+  attackPos: {fileID: 1421128338}
+  whatIsEnemy:
+    serializedVersion: 2
+    m_Bits: 256
+  camAnim: {fileID: 0}
 --- !u!1 &1548292950261072
 GameObject:
   m_ObjectHideFlags: 0
