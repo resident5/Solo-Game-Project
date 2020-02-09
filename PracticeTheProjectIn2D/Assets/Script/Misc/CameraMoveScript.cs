@@ -4,23 +4,72 @@ using UnityEngine;
 
 public class CameraMoveScript : MonoBehaviour
 {
+    Vector3 velocity = Vector3.zero;
 
-    public Vector3 minClamp;
-    public Vector3 maxClamp;
+    public Transform target;
 
-    public Transform player;
     public Vector3 offset;
+
+    public float smoothDamp = 0.15f;
+
+    public bool YMaxEnabled = false;
+    public float YMaxValue = 0;
+
+    public bool YMinEnabled = false;
+    public float YMinValue = 0;
+
+    public bool XMaxEnabled = false;
+    public float XMaxValue = 0;
+
+    public bool XMinEnabled = false;
+    public float XMinValue = 0;
 
     void Start()
     {
-        transform.position = new Vector3(player.transform.position.x, player.transform.position.y, -10);
+        //transform.position = new Vector3(target.transform.position.x, target.transform.position.y, -10);
+    }
+
+    private void FixedUpdate()
+    {
+        Vector3 targetPos = target.position;
+
+        if (YMinEnabled && YMaxEnabled)
+        {
+            targetPos.y = Mathf.Clamp(targetPos.y, YMinValue, YMaxValue);
+        }
+        else if (YMinEnabled)
+        {
+            targetPos.y = Mathf.Clamp(target.position.y, YMinValue, target.position.y);
+        }
+        else if (YMaxEnabled)
+        {
+            targetPos.y = Mathf.Clamp(target.position.y, target.position.y, YMaxValue);
+        }
+
+        if (XMinEnabled && XMaxEnabled)
+        {
+            targetPos.x = Mathf.Clamp(targetPos.x, XMinValue, XMaxValue);
+        }
+        else if (XMinEnabled)
+        {
+            targetPos.x = Mathf.Clamp(target.position.x, XMinValue, target.position.x);
+        }
+        else if (XMaxEnabled)
+        {
+            targetPos.x = Mathf.Clamp(target.position.x, target.position.x, XMaxValue);
+        }
+
+
+        targetPos.z = transform.position.z;
+
+        transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref velocity, smoothDamp);
     }
 
     void LateUpdate()
     {
-        transform.position = new Vector3(
-            Mathf.Clamp(transform.position.x, minClamp.x, maxClamp.x),
-            Mathf.Clamp(transform.position.y, minClamp.y, maxClamp.y), 
-            transform.position.z);
+        //transform.position = new Vector3(
+        //    Mathf.Clamp(transform.position.x, minClamp.x, maxClamp.x),
+        //    Mathf.Clamp(transform.position.y, minClamp.y, maxClamp.y), 
+        //    transform.position.z);
     }
 }

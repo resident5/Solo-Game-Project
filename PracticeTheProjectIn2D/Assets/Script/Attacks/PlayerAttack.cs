@@ -14,16 +14,22 @@ public class PlayerAttack : MonoBehaviour
 
     [SerializeField] private Animator camAnim;
 
+    [SerializeField] private AudioClip[] sounds;
+    private AudioSource audioSource { get => GetComponent<AudioSource>(); }
+
     void Update()
     {
-        Attack();
+        if (player.inputActive)
+        {
+            Attack();
+        } 
     }
 
     void Attack()
     {
         if (timeBtwAttack <= 0)
         {
-            if (Input.GetKeyDown(KeyCode.Z))
+            if (Input.GetKeyDown(KeyboardInputs.Instance.keybinder["ATTACK"]))
             {
                 player.animator.Play(player.currentAttack.name);
                 //0camAnim.Play("shake");
@@ -34,6 +40,8 @@ public class PlayerAttack : MonoBehaviour
                     for (int i = 0; i < enemiesToDamage.Length; i++)
                     {
                         var enemy = enemiesToDamage[i].GetComponent<NewEnemy>();
+                        audioSource.PlayOneShot(sounds[Random.Range(0, sounds.Length)]);
+                        
                         StartCoroutine(enemy.TakeDamage(player.currentAttack.damage));
                     }
                 }

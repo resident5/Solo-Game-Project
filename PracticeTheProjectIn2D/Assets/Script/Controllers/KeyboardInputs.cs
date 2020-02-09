@@ -23,14 +23,15 @@ public class KeyboardInputs : MonoBehaviour
 
 	public Dictionary<string, KeyCode> keybinder;
 
+
 	void Start ()
 	{
 		keybinder = new Dictionary<string, KeyCode> ();
 
-		keybinder.Add ("JUMP",KeyCode.W);
-		keybinder.Add ("LEFT",KeyCode.A);
-		keybinder.Add ("RIGHT",KeyCode.D);
-		keybinder.Add ("CROUCH",KeyCode.S);
+		keybinder.Add ("JUMP",KeyCode.UpArrow);
+		keybinder.Add ("LEFT",KeyCode.LeftArrow);
+		keybinder.Add ("RIGHT",KeyCode.RightArrow);
+		keybinder.Add ("CROUCH",KeyCode.DownArrow);
 
 		keybinder.Add ("ATTACK",KeyCode.Z);
 
@@ -39,7 +40,7 @@ public class KeyboardInputs : MonoBehaviour
 
 	}
 
-	public void RemoveKeybind(string key)
+    public void RemoveKeybind(string key)
 	{
 		keybinder.Remove (key);
 		ReplaceKeybind (key);

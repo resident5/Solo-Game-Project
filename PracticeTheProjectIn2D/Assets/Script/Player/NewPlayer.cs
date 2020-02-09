@@ -70,17 +70,13 @@ public class NewPlayer : NewCharacters
     #region Player forces
     [Header("Player Forces")]
 
-    [SerializeField] private float jumpForce;
+    [SerializeField] private float jumpVelocity;
 
     [SerializeField] private float bounceForce;
 
     [SerializeField] private float dashForce;
 
     [SerializeField] private float knockBackForce;
-
-    [SerializeField] private float fallMultiplier = 2.5f;
-    [SerializeField] private float jumpMultiplier = 2f;
-
 
     #endregion
 
@@ -116,6 +112,7 @@ public class NewPlayer : NewCharacters
     public Attack currentAttack;
     public int currentAttackIndex;
     NewEnemy attacker;
+    public bool inputActive = true;
 
     public bool beingUsed;
 
@@ -140,7 +137,10 @@ public class NewPlayer : NewCharacters
 
     void Update()
     {
-        PlayerInput();
+        if (inputActive)
+        {
+            PlayerInput();
+        }
 
         if (beingUsed)
         {
@@ -192,6 +192,7 @@ public class NewPlayer : NewCharacters
         if (Input.GetKeyDown(KeyboardInputs.Instance.keybinder["JUMP"]))
         {
             animator.SetTrigger("jump");
+            myRigidbody.velocity = Vector2.up * jumpVelocity;
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -225,12 +226,6 @@ public class NewPlayer : NewCharacters
 
         }
 
-        if (jump && myRigidbody.velocity.y == 0) //if the player pressed jump key and they are not moving vertically
-        {
-            Debug.Log("JUMP");
-            advancedJump.Jump(fallMultiplier, jumpMultiplier);
-            myRigidbody.AddForce(new Vector2(0, jumpForce));
-        }
     }
 
     void PlayerMovement(float move)

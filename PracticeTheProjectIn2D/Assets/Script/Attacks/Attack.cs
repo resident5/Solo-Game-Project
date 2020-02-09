@@ -28,6 +28,14 @@ public class Attack : ScriptableObject
         return triggerName;
     }
 
+    public KnockbackDirection knockback;
+
+    public enum KnockbackDirection
+    {
+        KnockUp,
+        KnockBack,
+        Pull
+    }
 }
 
 

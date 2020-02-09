@@ -5,63 +5,70 @@ using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
-	#region Singleton
-	private static GameController instance;
+    #region Singleton
+    private static GameController instance;
 
-	public static GameController Instance
-	{
-		get 
-		{ 
-			if (instance == null)
-			{
-				instance = FindObjectOfType<GameController> ();
-			}
-			return instance;
-		}
-	}
+    public static GameController Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = FindObjectOfType<GameController>();
+            }
+            return instance;
+        }
+    }
     #endregion
 
     NewPlayer mainPlayer;
 
+    #region Menu
+    [SerializeField] GameObject PauseMenu;
+    #endregion
+
     bool paused = false;
 
-	void Awake()
-	{
-		DontDestroyOnLoad (this.gameObject);
+    void Awake()
+    {
+        DontDestroyOnLoad(this.gameObject);
         mainPlayer = FindObjectOfType<NewPlayer>();
-	}
+    }
 
-	void Start ()
-	{
-		
-	}
+    void Start()
+    {
 
-	void Update ()
-	{
-		PlayerInputs ();
-	}
+    }
 
-	void FixedUpdate()
-	{
-		InputData ();
-	}
+    void Update()
+    {
+        Inputs();
+        InputData();
 
-	void PlayerInputs ()
-	{
-		if (Input.GetKeyDown (KeyboardInputs.Instance.keybinder ["PAUSE"]))
-		{
-			paused = !paused;
-		}
-	}
+    }
 
-	void InputData ()
-	{
-		if (paused)
-		{
-			Time.timeScale = 0;
-		} else
-		{
-			Time.timeScale = 1;
-		}
-	}
+    void Inputs()
+    {
+        if (Input.GetKeyDown(KeyboardInputs.Instance.keybinder["PAUSE"]))
+        {
+            paused = !paused;
+
+        }
+    }
+
+    void InputData()
+    {
+        if (paused)
+        {
+            Time.timeScale = 0;
+            mainPlayer.inputActive = false;
+            PauseMenu.SetActive(true);
+        }
+        else
+        {
+            Time.timeScale = 1;
+            mainPlayer.inputActive = true;
+            PauseMenu.SetActive(false);
+        }
+    }
 }
