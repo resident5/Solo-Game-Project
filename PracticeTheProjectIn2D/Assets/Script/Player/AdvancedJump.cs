@@ -19,12 +19,12 @@ public class AdvancedJump : MonoBehaviour
     {
         if (rb.velocity.y < 0)
         {
-            Debug.Log("Falling");
+            //Debug.Log("Falling");
             rb.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
         }
-        else if (rb.velocity.y > 0 && !Input.GetKey(KeyboardInputs.Instance.keybinder["JUMP"]))
+        else if (rb.velocity.y >= 0 && !Input.GetKey(KeyboardInputs.Instance.keybinder["JUMP"]))
         {
-            Debug.Log("Jumping");
+            //Debug.Log("Jumping");
             rb.velocity += Vector2.up * Physics2D.gravity.y * (jumpMultiplier - 1) * Time.deltaTime;
         }
     }

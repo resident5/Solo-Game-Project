@@ -65,7 +65,7 @@ public class NewEnemy : NewCharacters
 	{
 		base.Start ();
 
-        sight = Instantiate(enemySight);
+		sight = Instantiate(enemySight);
         sight.GetComponent<EnemySight>().enemy = this;
 
         StateChange(new IdleState ());

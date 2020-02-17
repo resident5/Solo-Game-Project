@@ -13,7 +13,7 @@ public abstract class NewCharacters : MonoBehaviour
 
     public bool facingRight;
 
-    public SpriteRenderer sprite;
+    public SpriteRenderer sprite { get => GetComponentInChildren<SpriteRenderer>(); }
 
     public bool attack;
     public bool damaged;
@@ -45,8 +45,13 @@ public abstract class NewCharacters : MonoBehaviour
     {
         facingRight = true;
         soundSource = GetComponent<AudioSource>();
-        sprite = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
+
+        if (animator == null)
+        {
+            animator = GetComponentInChildren<Animator>();
+        }
+
         healthStat.Initialize();
     }
 

@@ -39,6 +39,8 @@ public class NewPlayer : NewCharacters
 
     #endregion
 
+    public int jumpNum = 2;
+
     #region Booleans
 
     public bool jump;
@@ -122,6 +124,11 @@ public class NewPlayer : NewCharacters
     public Transform ui;
     public Canvas worldCanvas;
 
+    private void Awake()
+    {
+        myRigidbody = GetComponent<Rigidbody2D>();
+    }
+
     public override void Start()
     {
         base.Start();
@@ -129,8 +136,6 @@ public class NewPlayer : NewCharacters
         status = new List<IStatusEffects>();
 
         StatusEffects(null);
-
-        myRigidbody = GetComponent<Rigidbody2D>();
 
         beingUsed = false;
     }
@@ -189,8 +194,9 @@ public class NewPlayer : NewCharacters
             ui = Instantiate(pregInfo, worldCanvas.transform).transform;
         }
 
-        if (Input.GetKeyDown(KeyboardInputs.Instance.keybinder["JUMP"]))
+        if (Input.GetKeyDown(KeyboardInputs.Instance.keybinder["JUMP"]) && jumpNum > 0)
         {
+            NewPlayer.Instance.jumpNum -= 1;
             animator.SetTrigger("jump");
             myRigidbody.velocity = Vector2.up * jumpVelocity;
         }
@@ -227,13 +233,12 @@ public class NewPlayer : NewCharacters
         }
 
     }
-
     void PlayerMovement(float move)
     {
         if (myRigidbody.velocity.y < 0) //if the player is falling set the animation to landing
         {
             animator.SetBool("land", true);
-            jump = false;
+            //jump = false;
         }
 
         Turn(move);
@@ -279,7 +284,6 @@ public class NewPlayer : NewCharacters
     }
 
     #region Override Methods
-
     public override IEnumerator TakeDamage(int dmg)
     {
         //If your getting hit but your not immortal
@@ -332,6 +336,7 @@ public class NewPlayer : NewCharacters
                     //If the collider collided with anything thats not itself return true
                     if (colliders[i].gameObject != gameObject)
                     {
+                        jumpNum = 2;
                         return true;
                     }
                 }
@@ -409,7 +414,6 @@ public class NewPlayer : NewCharacters
     {
         base.OnTriggerEnter2D(other);
     }
-
 
     private void turnOffColliders()
     {

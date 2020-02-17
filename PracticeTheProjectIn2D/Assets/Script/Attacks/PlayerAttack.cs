@@ -31,17 +31,19 @@ public class PlayerAttack : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyboardInputs.Instance.keybinder["ATTACK"]))
             {
+                Debug.Log("Attack");
                 player.animator.Play(player.currentAttack.name);
                 //0camAnim.Play("shake");
                 Collider2D[] enemiesToDamage = Physics2D.OverlapCircleAll(attackPos.position, player.currentAttack.attackRange, whatIsEnemy);
 
                 if (enemiesToDamage.Length > 0)
                 {
+                    Debug.Log("hit him");
                     for (int i = 0; i < enemiesToDamage.Length; i++)
                     {
                         var enemy = enemiesToDamage[i].GetComponent<NewEnemy>();
                         audioSource.PlayOneShot(sounds[Random.Range(0, sounds.Length)]);
-                        
+                        GetComponent<HitStop>().Stop(0.1f);
                         StartCoroutine(enemy.TakeDamage(player.currentAttack.damage));
                     }
                 }

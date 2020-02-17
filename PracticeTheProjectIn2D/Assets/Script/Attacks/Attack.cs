@@ -32,8 +32,8 @@ public class Attack : ScriptableObject
 
     public enum KnockbackDirection
     {
-        KnockUp,
         KnockBack,
+        KnockUp,
         Pull
     }
 }

@@ -66,9 +66,9 @@ public class GameController : MonoBehaviour
         }
         else
         {
-            Time.timeScale = 1;
-            mainPlayer.inputActive = true;
-            PauseMenu.SetActive(false);
+            //Time.timeScale = 1;
+            //mainPlayer.inputActive = true;
+            //PauseMenu.SetActive(false);
         }
     }
 }
