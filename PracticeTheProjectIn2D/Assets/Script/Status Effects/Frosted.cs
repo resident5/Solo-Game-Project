@@ -33,7 +33,7 @@ public class Frosted : IStatusEffects
 	{
 		afflicted = character;
 
-		afflicted.GetComponent<SpriteRenderer> ().color = Color.blue;
+		afflicted.transform.GetChild(0).GetComponent<SpriteRenderer> ().color = Color.blue;
 
 		icon = Resources.Load<Sprite> ("Frost Icon");
 
@@ -87,7 +87,7 @@ public class Frosted : IStatusEffects
 		Debug.Log ("Ending Frosted");
 
 		//afflicted.status.Find(this) = null;
-		afflicted.GetComponent<SpriteRenderer> ().color = Color.white;
+		afflicted.transform.GetChild(0).GetComponent<SpriteRenderer> ().color = Color.white;
 		activated = false;
 
 		Destroy (debuff);

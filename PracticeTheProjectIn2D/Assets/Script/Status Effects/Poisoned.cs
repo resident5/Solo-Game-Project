@@ -32,7 +32,7 @@ public class Poisoned : IStatusEffects
 	{
 		afflicted = character;
 
-		afflicted.GetComponent<SpriteRenderer> ().color = Color.green;
+		afflicted.transform.GetChild(0).GetComponent<SpriteRenderer> ().color = Color.green;
 
 		icon = Resources.Load<Sprite> ("Poison");
 
@@ -86,7 +86,7 @@ public class Poisoned : IStatusEffects
 		Debug.Log ("Ending Poisoned");
 
 		//afflicted.status = null;
-		afflicted.GetComponent<SpriteRenderer> ().color = Color.white;
+		afflicted.transform.GetChild(0).GetComponent<SpriteRenderer> ().color = Color.white;
 		activated = false;
 
 		Destroy (debuff);
@@ -110,7 +110,6 @@ public class Poisoned : IStatusEffects
 	public void UpdateDebuff ()
 	{
 		debuffTimer.text = "" + Mathf.Round (timer);
-
 	}
 
 	public void ToolTip ()

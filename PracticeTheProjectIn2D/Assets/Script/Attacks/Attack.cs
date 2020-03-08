@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
 [CreateAssetMenu(menuName = "New Attack")]
 public class Attack : ScriptableObject
 {
@@ -14,6 +13,8 @@ public class Attack : ScriptableObject
     public KeyCode requiredInputKey;
 
     public float attackRange;
+
+    public float knockbackForce;
 
     public Attack nextAttack;
 
@@ -30,6 +31,7 @@ public class Attack : ScriptableObject
 
     public KnockbackDirection knockback;
 
+
     public enum KnockbackDirection
     {
         KnockBack,
@@ -37,7 +39,3 @@ public class Attack : ScriptableObject
         Pull
     }
 }
-
-
-
-

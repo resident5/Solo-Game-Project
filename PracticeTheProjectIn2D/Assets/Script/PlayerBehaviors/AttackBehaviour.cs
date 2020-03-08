@@ -8,19 +8,17 @@ public class AttackBehaviour : StateMachineBehaviour
 	// OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
 	override public void OnStateEnter (Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
 	{
-        //animator.GetComponent<NewCharacters>().attack = false;
+        animator.GetComponent<NewCharacters>().attack = false;
+        animator.GetComponent<NewCharacters> ().attack = true;
+        animator.SetFloat ("speed", 0f);
 
-        //animator.GetComponent<NewCharacters> ().attack = true;
-
-        //animator.SetFloat ("speed", 0f);
-
-        //if (animator.gameObject.tag == "Player")
-        //{
-        //	if (NewPlayer.Instance.OnGround)
-        //	{
-        //		NewPlayer.Instance.myRigidbody.velocity = Vector2.zero;
-        //	}
-        //}
+        if (animator.gameObject.tag == "Player")
+        {
+        	if (NewPlayer.Instance.OnGround)
+        	{
+        		NewPlayer.Instance.myRigidbody.velocity = Vector2.zero;
+        	}
+        }
     }
 
     //	 OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

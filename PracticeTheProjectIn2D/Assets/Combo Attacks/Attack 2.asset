@@ -17,4 +17,6 @@ MonoBehaviour:
   triggerName: attack
   requiredInputKey: 122
   attackRange: 2
+  knockbackForce: 10
   nextAttack: {fileID: 0}
+  knockback: 1

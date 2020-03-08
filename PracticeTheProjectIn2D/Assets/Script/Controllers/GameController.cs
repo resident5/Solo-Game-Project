@@ -23,6 +23,9 @@ public class GameController : MonoBehaviour
 
     NewPlayer mainPlayer;
 
+    [Range(0.01f, 0.2f)]
+    public float hitStopAmount;
+
     #region Menu
     [SerializeField] GameObject PauseMenu;
     #endregion
@@ -63,12 +66,6 @@ public class GameController : MonoBehaviour
             Time.timeScale = 0;
             mainPlayer.inputActive = false;
             PauseMenu.SetActive(true);
-        }
-        else
-        {
-            //Time.timeScale = 1;
-            //mainPlayer.inputActive = true;
-            //PauseMenu.SetActive(false);
         }
     }
 }

@@ -9,19 +9,10 @@ public class DamageBehaviour : StateMachineBehaviour
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         var rigid = animator.GetComponent<Rigidbody2D>();
-        
-        //CLEAN THIS SO THE ENEMY CAN USE THE SAME SYSTEM
-        if (rigid != null)
-        {
-            rigid.velocity = Vector2.zero;
-            animator.GetComponent<NewCharacters>().damaged = true;
-        }
-        else
-        {
-            animator.transform.parent.GetComponent<NewCharacters>().damaged = true;
-            animator.transform.parent.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
 
-        }
+
+        animator.transform.parent.GetComponent<NewCharacters>().damaged = true;
+        animator.transform.parent.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
@@ -32,16 +23,7 @@ public class DamageBehaviour : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-
-        if (animator.GetComponent<NewCharacters>())
-        {
-            animator.GetComponent<NewCharacters>().damaged = false;
-        }
-        else
-        {
-            animator.transform.parent.GetComponent<NewCharacters>().damaged = false;
-        }
-
+        animator.transform.parent.GetComponent<NewCharacters>().damaged = false;
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove(). Code that processes and affects root motion should be implemented here
