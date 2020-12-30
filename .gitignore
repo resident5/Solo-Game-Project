@@ -1,10 +1,9 @@
-PracticeTheProjectIn2D/[Ll]ibrary/
-PracticeTheProjectIn2D/[Tt]emp/
-PracticeTheProjectIn2D/[Oo]bj/
-PracticeTheProjectIn2D/[Bb]uild/
-PracticeTheProjectIn2D/[Bb]uilds/
-PracticeTheProjectIn2D/Library/
-PracticeTheProjectIn2D/Assets/AssetStoreTools*
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+Assets/AssetStoreTools*
 
 # Visual Studio 2015 cache directory
 /PracticeTheProjectIn2D/.vs/

@@ -1,0 +1,4 @@
+{
+	"event_1":{"char": "Nonplayer","text": "What's up kid."},
+	"event_2":{"char": "Player","text": "Nothing much you old fart"}
+}
