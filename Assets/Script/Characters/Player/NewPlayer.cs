@@ -387,6 +387,8 @@ public class NewPlayer : NewCharacters
 
     #endregion
 
+    //Methods for info
+
     #region InfoMethods
 
     private bool IsGrounded()
