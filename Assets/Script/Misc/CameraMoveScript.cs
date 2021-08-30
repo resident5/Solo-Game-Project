@@ -24,6 +24,12 @@ public class CameraMoveScript : MonoBehaviour
     public bool XMinEnabled = false;
     public float XMinValue = 0;
 
+
+    private void Awake()
+    {
+        DontDestroyOnLoad(this.gameObject);
+
+    }
     void Start()
     {
         //transform.position = new Vector3(target.transform.position.x, target.transform.position.y, -10);
@@ -59,10 +65,14 @@ public class CameraMoveScript : MonoBehaviour
             targetPos.x = Mathf.Clamp(target.position.x, target.position.x, XMaxValue);
         }
 
-
         targetPos.z = transform.position.z;
 
         transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref velocity, smoothDamp);
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(target.position, 3f);
     }
 
     void LateUpdate()

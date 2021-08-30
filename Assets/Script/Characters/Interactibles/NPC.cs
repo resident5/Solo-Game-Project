@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using JsonParser;
 
-public class NPC : MonoBehaviour
-{
 
-    bool buttonPressed = false;
+public class NPC : Interactable
+{
     NewPlayer player { get => NewPlayer.Instance; }
 
     public DialogueUI dialogueUI;
 
     new string name;
+
+    int index;
 
     float interactRadius;
 
@@ -20,15 +21,22 @@ public class NPC : MonoBehaviour
         dialogueUI = GameController.Instance.GetComponent<DialogueController>().dialogueUI;
     }
 
+    public override void Interact()
+    {
+        StartCoroutine(StartDialogue());
+    }
 
     public IEnumerator StartDialogue()
     {
         var textFile = Resources.Load<TextAsset>("Conversations/Test/NPCTest");
-
         var data = MiniJSON.Decode(textFile.text) as IDictionary;
-
         dialogueUI.gameObject.SetActive(true);
+        player.inputActive = false;
 
+
+        index = 1;
+
+        //Use a for loop?
         foreach (var events in data.Values)
         {
             while (!Input.GetKeyDown(KeyboardInputs.Instance.keybinder["ACTIVATE"]))
@@ -40,7 +48,7 @@ public class NPC : MonoBehaviour
                 {
                     dialogueUI.playerSide.SetActive(false);
 
-                    dialogueUI.npcNameBox.text = name;
+                    dialogueUI.npcNameBox.text = "Terabyte";
                     dialogueUI.npcDialogueBox.text = selectedDialogue["text"] as string;
                     dialogueUI.npcSide.SetActive(true);
 
@@ -53,14 +61,22 @@ public class NPC : MonoBehaviour
                     dialogueUI.playerNameBox.text = "Atlas";
                     dialogueUI.playerDialogueBox.text = selectedDialogue["text"] as string;
                     dialogueUI.playerSide.SetActive(true);
-
                 }
+
                 yield return null;
+
             }
+
 
             yield return null;
 
-            Debug.Log("Finished dialouge");
+            if (index >= data.Values.Count)
+            {
+                EndDialogue();
+            }
+
+            index++;
+
 
         }
 
@@ -72,20 +88,16 @@ public class NPC : MonoBehaviour
 
         //player.inputActive = false;
 
-
         //events["event_1"];
     }
 
     void EndDialogue()
     {
-        dialogueUI.gameObject.SetActive(true);
+        StopAllCoroutines();
+        player.inputActive = true;
+        dialogueUI.gameObject.SetActive(false);
         dialogueUI.playerSide.SetActive(false);
         dialogueUI.npcSide.SetActive(false);
 
-    }
-
-    public void ButtonPressed()
-    {
-        buttonPressed = true;
     }
 }

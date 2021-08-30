@@ -61,6 +61,9 @@ public class NewPlayer : NewCharacters
     private float groundRadius;
 
     [SerializeField]
+    private float interactRadius = 3f;
+
+    [SerializeField]
     private LayerMask groundMask;
 
     [SerializeField]
@@ -103,7 +106,7 @@ public class NewPlayer : NewCharacters
     public Attack currentAttack;
     public int currentAttackIndex;
 
-    public NPC focusedNPC;
+    public Interactable focusedNPC;
 
     NewEnemy partner;
 
@@ -131,6 +134,8 @@ public class NewPlayer : NewCharacters
     private void Awake()
     {
         myRigidbody = GetComponent<Rigidbody2D>();
+        DontDestroyOnLoad(this.gameObject);
+
     }
 
     public override void Start()
@@ -148,6 +153,8 @@ public class NewPlayer : NewCharacters
 
     void Update()
     {
+        FocusOnInteractable();
+
         if (inputActive)
         {
             PlayerInput();
@@ -179,7 +186,6 @@ public class NewPlayer : NewCharacters
     {
         if (!IsDead || !isStunned || !damaged)
         {
-
             float move = Input.GetAxis("Horizontal");
 
             OnGround = IsGrounded();
@@ -195,6 +201,8 @@ public class NewPlayer : NewCharacters
 
     void PlayerInput()
     {
+        if(focusedNPC != null)
+        Debug.Log("Player's actual focus is + " + focusedNPC.name);
 
         if (Input.GetKey(KeyCode.C))
         {
@@ -217,13 +225,34 @@ public class NewPlayer : NewCharacters
         }
         else if (Input.GetKeyDown(KeyboardInputs.Instance.keybinder["JUMP"]) && focusedNPC != null)
         {
-            StartCoroutine(focusedNPC.StartDialogue());
+            Debug.Log("PLAYER IN INTERACT MODE WITH " + focusedNPC.name);
+
+            if (focusedNPC.gameObject.GetComponent<NPC>())
+            {
+                Debug.Log("PLAYER SHOULD NOW BE INTERACTING WITH NPC");
+                var npc = focusedNPC.gameObject.GetComponent<NPC>();
+                npc.Interact();
+            }
+
+            //if (focusedNPC.gameObject.GetComponent<Portal>())
+            //{
+            //    Debug.Log("PLAYER SHOULD NOW BE INTERACTING WITH PORTAL");
+            //    var npc = focusedNPC.gameObject.GetComponent<Portal>();
+            //    npc.Interact();
+            //}
+
+            //if (focusedNPC.gameObject.GetComponent<NPC>())
+            //{
+            //    Debug.Log("PLAYER SHOULD NOW BE INTERACTING WITH NPC");
+            //    var npc = focusedNPC.gameObject.GetComponent<NPC>();
+            //    npc.Interact();
+            //}
+
         }
 
-        if(Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             Debug.Log("Pressed space");
-            focusedNPC.ButtonPressed();
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -260,26 +289,29 @@ public class NewPlayer : NewCharacters
     }
     void PlayerMovement(float move)
     {
-        if (myRigidbody.velocity.y < 0) //if the player is falling set the animation to landing
+        if (inputActive)
         {
-            animator.SetBool("land", true);
-            //jump = false;
-        }
+            if (myRigidbody.velocity.y < 0) //if the player is falling set the animation to landing
+            {
+                animator.SetBool("land", true);
+                //jump = false;
+            }
 
-        Turn(move);
+            Turn(move);
 
-        if (!dashing)
-        {
-            myRigidbody.velocity = new Vector2(move * speed, myRigidbody.velocity.y);
-            animator.SetFloat("speed", Mathf.Abs(move));
-        }
-        else
-        {
-            myRigidbody.velocity = Vector2.right * dashForce * move * Time.deltaTime;
+            if (!dashing)
+            {
+                myRigidbody.velocity = new Vector2(move * speed, myRigidbody.velocity.y);
+                animator.SetFloat("speed", Mathf.Abs(move));
+            }
+            else
+            {
+                myRigidbody.velocity = Vector2.right * dashForce * move * Time.deltaTime;
+            }
         }
 
     }
-
+    
     public void StatusEffects(IStatusEffects newStatus)
     {
         foreach (Transform child in statusParent)
@@ -440,6 +472,21 @@ public class NewPlayer : NewCharacters
 
         //Turn off colliders
         turnOffColliders();
+    }
+
+    void FocusOnInteractable()
+    {
+        
+        //float dist = Vector2.Distance(transform.position, gameObject.transform.position);
+        //if (dist <= radius)
+        //{
+        //    focusedNPC = this;
+        //    //Debug.Log("Player has interacted with this " + gameObject.name);
+        //}
+        //else
+        //{
+        //    focusedNPC = null;
+        //}
     }
 
     #endregion

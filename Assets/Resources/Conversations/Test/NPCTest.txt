@@ -1,4 +1,7 @@
 {
-	"event_1":{"char": "Nonplayer","text": "What's up kid."},
-	"event_2":{"char": "Player","text": "Nothing much you old fart"}
+	"event_1":{"char": "Nonplayer","text": "H-Hi I'm Terabyte. I'm from the Network Neighborhood series"},
+	"event_2":{"char": "Player","text": "(Snore)"},
+	"event_3":{"char": "Nonplayer","text": "Uhhhhh"},
+	"event_4":{"char": "Player","text": "(Louder Snoring)"},
+	"event_5":{"char": "Nonplayer","text": "Hello???"}
 }
